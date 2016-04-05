@@ -1,0 +1,25 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.player._id ? 'Edit Player' : 'New Player'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.playerForm" class="form-horizontal" ng-submit="vm.save(vm.form.playerForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="player_name">player_name</label>
+          <input name="player_name" type="text" ng-model="vm.player.player_name" id="player_name" class="form-control" placeholder="player_name" required>
+          <div ng-messages="vm.form.playerForm.player_name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Player name is required.</p>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.player._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

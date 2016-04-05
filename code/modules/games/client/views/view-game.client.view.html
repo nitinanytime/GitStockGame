@@ -1,0 +1,171 @@
+<section>
+<!--/ribbon-two-->
+                       <h3 class="inner-tittle two">{{vm.player.player_username}}</h3>
+                      <div class="ribbon-one graph">
+                        <!--/ribbon-inner-->
+                          <div class="ribbon-inner one">
+                            <div class="ribbon1">
+                              <div class="ribbon-fold"><h4>Balance : {{vm.player.player_money}}</h4></div>
+                            </div>
+                            Game Start Time : {{vm.game.game_startTime}}
+                            <br>
+                            Game End Time : {{vm.game.game_startTime}}
+
+                          </div>
+
+                         <!--/ribbon-inner-->
+                      </div>
+                       <!--//ribbon-two-->
+  <div class="page-header">
+    <h1 data-ng-bind="vm.game.game_name"></h1>
+    <a class="btn btn-primary" ng-show="!vm.player._id" data-ng-click="vm.joinGame(vm.game)">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+    <a class="btn green fifth" ng-show="vm.player._id" data-ng-click="vm.getPlayerMoves('playerStockModel')">See My Stocks</a>
+    <a class="btn green fifth" ng-show="vm.player._id" data-ng-click="vm.getPlayerMoves('playerMoveModel')">See My Moves</a>
+
+  </div>
+  <div class="pull-right"
+       data-ng-show="vm.game.isCurrentUserOwner">
+    <a class="btn btn-primary"
+       data-ui-sref="games.edit({ gameId: vm.game._id })">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" data-ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span data-ng-bind="vm.game.created | date:'mediumDate'"></span>
+      by
+      <span data-ng-if="vm.game.user"
+            data-ng-bind="vm.game.user.displayName"></span>
+      <span data-ng-if="!vm.game.user">Deleted User</span>
+    </em>
+
+  </small>
+  <p class="lead" data-ng-bind="vm.game.content"></p>
+
+<modal title="Login form" visible="vm.buyStockModel" >
+      <form role="form" ng-submit="vm.buyStockSave()">
+        <div class="form-group">
+          <label for="email">Stock Units</label>
+          <input type="text" class="form-control"  ng-model="vm.playermove.stock_unit"/>
+        </div>
+        
+        <div class="form-group">
+          <label for="comment">Comment</label>
+          <input type="text" class="form-control"  ng-model="vm.playermove.comment"  />
+        </div>
+       
+       <div class="form-group">
+          <h3>Calculated Price - {{(vm.playermove.stock.Last) * (vm.playermove.stock_unit)}}</h3>
+        </div>
+        <div class="form-group">
+          <h3>Balance Money - {{(vm.player.player_money) - ((vm.playermove.stock.Last) * (vm.playermove.stock_unit))}}</h3>
+        </div>
+        <button type="submit" class="btn btn-success">Buy</button>
+        <button class="btn btn-default" ng-click="regtoggleModal()" >Registration</button>
+
+      </form>
+    </modal>
+
+    <modal title="Congratulation" visible="vm.joingameModal" >
+      <img src="http://i925.photobucket.com/albums/ad100/Marwan_Nulhakam/prototype/gif_welcome.gif" />
+      <h4 class="title3" style="font-size:2.00em;">Congrats You Got {{vm.game.game_money}} For Playing this game</h4 >
+    </modal>
+
+
+  <modal title="Congratulation" visible="vm.playerStockModel" >
+      <div class="graph" style="font-size:1.75em">
+                              <div class="tables">
+                                <table class="table table-hover">
+                                
+                       <thead> <tr> <th>Stock Symbol</th> <th> Count</th><th>Action</th> </tr> </thead> <tbody> <tr  data-ng-repeat="playerStock in vm.playerStocks" 
+       > <th scope="row">{{playerStock.Symbol}}</th>  <td style="color:red;">{{playerStock.Count}}</td> <td><a class="btn green fifth" >Sell</a></td></tr> </tbody> </table> 
+                              </div>
+                        
+                          </div>
+    </modal>
+
+    <modal title="Congratulation" visible="vm.playerMoveModel" >
+      <div class="graph" style="font-size:1.75em">
+                              <div class="tables">
+                                <table class="table table-hover">
+                                
+                       <thead> <tr> <th>Stock Symbol</th> <th> Count</th> <th> Price</th> <th>Action</th> </tr> </thead> <tbody> <tr data-ng-repeat="playerMove in vm.playerAllMoves" title=" Total Money : {{playerMove.total_money}} 
+Date : {{playerMove.created}} " 
+       > <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{playerMove.stock.Symbol}}</th>  <td style="color:red;">{{playerMove.stock_unit}}</td> <td>{{playerMove.stock_price}}</td>  <td>{{playerMove.type}}</td></tr> </tbody> </table> 
+                              </div>
+                        
+                          </div>
+    </modal>
+
+    <div class="clearfix"></div>
+  <div class="list-group">
+  <h4  >Stock List</h3>
+
+                              <div class="graph" style="font-size:1.75em">
+                              <div class="tables">
+                                <table class="table table-hover">
+                                <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" ng-model="searchStock" name="search" class="form-control2 input-search" placeholder="Search...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                       <thead> <tr> <th>Stock Symbol</th> <th> Name</th> <th>Stock Rate</th> <th>Last Rate</th> <th>Change</th> <th>Action</th> </tr> </thead> <tbody> <tr  data-ng-repeat="stock in vm.stocks | filter:searchStock | limitTo:20" 
+       > <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{stock.Symbol}}</th> <td>{{stock.Name}}</td> <td>{{stock.Market}}</td> <td>{{stock.Last}}</td> <td style="color:red;">{{stock.ChangeFromPreviousClose}}</td> <td><a class="btn green fifth" ng-click="vm.buyThisStock(stock)">BuyThis</a></td></tr> </tbody> </table> 
+                              </div>
+                        
+                          </div>
+
+
+   <div class="page-header">
+    <h1>Stocks</h1>
+  </div>
+  <div class="list-group" ng-controller= "StocksListController">
+    <a data-ng-repeat="stock in vm.stocks"
+       data-ui-sref="stocks.view({ stockId: stock._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="stock.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="stock.user" data-ng-bind="stock.user.displayName"></span>
+        <span data-ng-if="!stock.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="stock.name"></h4>
+    </a>
+  </div>
+
+  <div class="alert alert-warning text-center" data-ng-if="vm.stocks.$resolved && !vm.stocks.length">
+    No Stocks yet, why don't you <a data-ui-sref="stocks.create">create one</a>?
+  </div>
+
+<div class="page-header">
+    <h1>Players</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="player in vm.players"
+       data-ui-sref="players.view({ playerId: player._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="player.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="player.user" data-ng-bind="player.user.displayName"></span>
+        <span data-ng-if="!player.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="player.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.players.$resolved && !vm.players.length">
+    No Players yet, why don't you <a data-ui-sref="players.create">create one</a>?
+  </div>
+ 
+</section>

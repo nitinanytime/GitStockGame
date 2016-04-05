@@ -1,0 +1,43 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.stock._id ? 'Edit Stock' : 'New Stock'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.stockForm" class="form-horizontal" ng-submit="vm.save(vm.form.stockForm.$valid)" novalidate>
+      <fieldset>
+
+      <div class="form-group" show-errors>
+          <label class="control-label" for="Symbol">Symbol</label>
+          <input name="Symbol" type="text" ng-model="vm.stock.Symbol" id="Symbol" class="form-control" placeholder="Symbol" required>
+          <div ng-messages="vm.form.stockForm.Symbol.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Stock Symbol is required.</p>
+          </div>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="Market">Market</label>
+          <input name="Market" type="text" ng-model="vm.stock.Market" id="Market" class="form-control" placeholder="Market" required>
+          <div ng-messages="vm.form.stockForm.Market.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Stock Market is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="Name">Name</label>
+          <input name="Name" type="text" ng-model="vm.stock.Name" id="Name" class="form-control" placeholder="Name" required>
+          <div ng-messages="vm.form.stockForm.Name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Stock Name is required.</p>
+          </div>
+        </div>
+         
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.stock._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Games</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="game in vm.games"
+       data-ui-sref="games.view({ gameId: game._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Game Created
+        <span data-ng-bind="game.created | date:'mediumDate'"></span>
+        Name
+        <span data-ng-if="game.user" data-ng-bind="game.user.displayName"></span>
+        <span data-ng-if="!game.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="game.game_name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.games.$resolved && !vm.games.length">
+    No Games yet, why don't you <a data-ui-sref="games.create">create one</a>?
+  </div>
+</section>

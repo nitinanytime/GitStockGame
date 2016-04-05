@@ -1,0 +1,89 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.game._id ? 'Edit Game' : 'New Game'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.gameForm" class="form-horizontal" ng-submit="vm.save(vm.form.gameForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_name">game_name</label>
+          <input name="game_name" type="text" ng-model="vm.game.game_name" id="game_name" class="form-control" placeholder="game_name" required>
+          <div ng-messages="vm.form.gameForm.game_name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_name is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_type">game_type</label>
+          <input name="game_type" type="text" ng-model="vm.game.game_type" id="game_type" class="form-control" placeholder="game_type" required>
+          <div ng-messages="vm.form.gameForm.game_type.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_type is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_startTime">game_startTime</label>
+          <input name="game_startTime" type="date" ng-model="vm.game.game_startTime" id="game_startTime" class="form-control" placeholder="game_startTime" required>
+          <div ng-messages="vm.form.gameForm.game_startTime.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_startTime is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_endTime">game_endTime</label>
+          <input name="game_endTime" type="date" ng-model="vm.game.game_endTime" id="game_endTime" class="form-control" placeholder="game_endTime" required>
+          <div ng-messages="vm.form.gameForm.game_endTime.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_endTime is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_maxPlayer">game_maxPlayer</label>
+          <input name="game_maxPlayer" type="number" ng-model="vm.game.game_maxPlayer" id="game_maxPlayer" class="form-control" placeholder="game_maxPlayer" required>
+          <div ng-messages="vm.form.gameForm.game_maxPlayer.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_maxPlayer is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_player">game_player</label>
+          <input name="game_player" type="number" ng-model="vm.game.game_player" id="game_player" class="form-control" placeholder="game_player" required>
+          <div ng-messages="vm.form.gameForm.game_player.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_player is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_money">game_money</label>
+          <input name="game_money" type="number" ng-model="vm.game.game_money" id="game_money" class="form-control" placeholder="game_money" required>
+          <div ng-messages="vm.form.gameForm.game_money.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_money is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_maxMoney">game_maxMoney</label>
+          <input name="game_maxMoney" type="number" ng-model="vm.game.game_maxMoney" id="game_maxMoney" class="form-control" placeholder="game_maxMoney" required>
+          <div ng-messages="vm.form.gameForm.game_maxMoney.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_maxMoney is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_minMoney">game_minMoney</label>
+          <input name="game_minMoney" type="number" ng-model="vm.game.game_minMoney" id="game_minMoney" class="form-control" placeholder="game_minMoney" required>
+          <div ng-messages="vm.form.gameForm.game_minMoney.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_minMoney is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.game._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
