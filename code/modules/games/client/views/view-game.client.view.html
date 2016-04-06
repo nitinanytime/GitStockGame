@@ -72,6 +72,30 @@
       </form>
     </modal>
 
+    <modal title="Login form" visible="vm.sellStockModel" >
+      <form role="form" ng-submit="vm.sellStockSave()">
+        <div class="form-group">
+          <label for="email">Stock Units</label>
+          <input type="text" class="form-control"  ng-model="vm.playermove.stock_unit"/>
+        </div>
+        
+        <div class="form-group">
+          <label for="comment">Comment</label>
+          <input type="text" class="form-control"  ng-model="vm.playermove.comment"  />
+        </div>
+       
+       <div class="form-group">
+          <h3>Calculated Price - {{(vm.playermove.stock.Last) * (vm.playermove.stock_unit)}}</h3>
+        </div>
+        <div class="form-group">
+          <h3>Balance Money - {{(vm.player.player_money) + ((vm.playermove.stock.Last) * (vm.playermove.stock_unit))}}</h3>
+        </div>
+        <button type="submit" class="btn btn-success">Sell</button>
+        
+
+      </form>
+    </modal>
+
     <modal title="Congratulation" visible="vm.joingameModal" >
       <img src="http://i925.photobucket.com/albums/ad100/Marwan_Nulhakam/prototype/gif_welcome.gif" />
       <h4 class="title3" style="font-size:2.00em;">Congrats You Got {{vm.game.game_money}} For Playing this game</h4 >
@@ -80,11 +104,12 @@
 
   <modal title="Congratulation" visible="vm.playerStockModel" >
       <div class="graph" style="font-size:1.75em">
+     
                               <div class="tables">
                                 <table class="table table-hover">
                                 
                        <thead> <tr> <th>Stock Symbol</th> <th> Count</th><th>Action</th> </tr> </thead> <tbody> <tr  data-ng-repeat="playerStock in vm.playerStocks" 
-       > <th scope="row">{{playerStock.Symbol}}</th>  <td style="color:red;">{{playerStock.Count}}</td> <td><a class="btn green fifth" >Sell</a></td></tr> </tbody> </table> 
+       > <th scope="row">{{playerStock.Symbol}}</th>  <td style="color:red;">{{playerStock.Count}}</td> <td><a class="btn green fifth" data-ng-click="vm.sellThisStock(playerStock.Symbol)">Sell</a></td></tr> </tbody> </table> 
                               </div>
                         
                           </div>

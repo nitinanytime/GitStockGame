@@ -23,14 +23,21 @@
     vm.joinGame =joinGame;
     vm.stocks = StocksService.query();
     vm.buyStockModel = false;
+    vm.sellStockModel = false;
     vm.buyThisStock =buyThisStock;
+    vm.sellThisStock = sellThisStock;
     vm.buyStockSave = buyStockSave;
+    vm.sellStockSave = sellStockSave;
     vm.playermove= playermove;
     vm.getPlayerMoves = getPlayerMoves;
 
     vm.playerStockModel = false;
     vm.playerMoveModel=false;
     
+    $scope.demo1 = {
+    min: 20,
+    max: 80
+};
 
     alert(vm.game._id);
     console.log(game.game_startTime);
@@ -144,6 +151,7 @@
     // Save Game
   function buyThisStock(stock){
     console.log(stock);
+
     vm.playermove.stock = stock;
     vm.playermove.game = vm.game._id;
     vm.playermove.stock_unit = 1;
@@ -179,9 +187,57 @@
 
     }
 
+    function sellThisStock(Symbol){
+    console.log(Symbol);
+    vm.playerStockModel = !vm.playerStockModel;
+    StocksService.query({
+      stock: Symbol
+    }, function (data) {
+      // body...
+      console.log(data);
+      vm.playermove.stock = data[0];
+      vm.playermove.game = vm.game._id;
+      vm.playermove.stock_unit = 1;
+      vm.sellStockModel = !vm.sellStockModel;
+      
+    });
+    
+
+    
+
+    }
+
+    function sellStockSave(){
+      console.log(vm.playermove);
+      
+      vm.playermove.stock_price = vm.playermove.stock.Last;
+      vm.playermove.type = 'SELL';
+      vm.playermove.total_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
+      vm.playermove.player = vm.player._id;
+      vm.playermove.stock = vm.playermove.stock._id;
+
+      vm.playermove.$save(null, null);
+
+      updatePlayer();
+      function updatePlayer(){
+        vm.player.player_money = vm.player.player_money + vm.playermove.total_money;
+        vm.player.$update(successCallback, errorCallback);
+      }
+      function successCallback(res) {
+        vm.sellStockModel = !vm.sellStockModel;
+      }
+
+      function errorCallback(res) {
+        vm.error = res.data.message;
+        console.log(vm.error);
+      }
+
+    }
+
     function doNothing(){
         
       }
+
 
 
     function save(isValid) {
