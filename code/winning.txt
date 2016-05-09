@@ -1,0 +1,192 @@
+Edit the game creation page.
+
+For stock Buy , Enter the shares number only with stock ID , price we will show dynamically.
+when user will buy 10 shares of AAPL it means , 
+Stock - AAPL
+Shares - 10
+Stock_money - stock.price * Stock_count
+
+
+Game initiation logics-
+game Status will be as running at the staring time of game.
+at the time of running status-
+calculate all the players , there lineups and save in locked state.
+game will be locked , lineup will be locked.
+
+Game Closing logic- 
+
+1st- winner calculation logic
+
+2nd - winner show and changes in database
+
+3rd - close the game and send the notification to players.
+
++
+
+
+How to create New Modal With API-
+ yo meanjs:crud-module LineUp
+
+
+
+Admin Stuf-
+
+Winning Commision
+Winning Rules
+Total Profit
+Total Account Balcne
+
+
+
+Payments
+
+transactionId
+amount
+comment
+status
+type
+after_balnace
+created
+user
+
+
+LineUps
+stock
+checked
+stock_unit
+user
+
+https://alexanderzeitler.com/articles/mongoose-referencing-schema-in-properties-and-arrays/
+
+
+http://www.tutorialspoint.com/javaexamples/index.htm
+
+https://www.paypal-knowledge.com/infocenter/index?page=content&id=FAQ1413&expand=true&locale=en_US
+
+https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_flow&SESSION=GAQTpDao9zExnCWdvkf-GksnUFX_mfZgqwgCsj0NbD5jClaw5Vg0cORHC6K&dispatch=5885d80a13c0db1f8e263663d3faee8d6625bf1e8bd269586d425cc639e26c6a
+
+
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+var path = require('path'),
+  mongoose = require('mongoose'),
+  Payment = mongoose.model('Payment'),
+  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
+  _ = require('lodash');
+
+
+var paypal = require('paypal-rest-sdk');
+
+var paypalConfig = {
+    "host" : "api.sandbox.paypal.com",
+    "port" : "",            
+    "client_id" : "AY4AM0VDtR_Ec_0WFziHubfRk04V84_dLPtBAxioCjknPf0Ufp_qL08KwO_IiumRkEPVtDkg_On-5Q9J",
+    "client_secret" : "EIEquePxE2BW4oQXe8bkTIRnWj9AH30jiZXab4J8XGjosCGFHftmjeQRbmXOxfE9lGlw6YwYMMJg0yBC"
+  };
+
+  paypal.configure(paypalConfig);
+
+/*var payment = {
+  "intent": "sale",
+  "payer": {
+    "payment_method": "credit_card",
+    "funding_instruments": [{
+      "credit_card": {
+        "number": "4804131367836585",
+        "type": "visa",
+        "expire_month": 10,
+        "expire_year": 2020,
+        "cvv2": 111,
+        "first_name": "Joe",
+        "last_name": "Shopper"
+      }
+    }]
+  },
+  "transactions": [{
+    "amount": {
+      "total": "5.00",
+      "currency": "USD"
+    },
+    "description": "My awesome payment"
+  }]
+};*/
+
+var payment = {
+  "intent": "sale",
+  "payer": {
+    "payment_method": "paypal"
+  },
+  "redirect_urls": {
+    "return_url": "http://0.0.0.0:3000/payments/create",
+    "cancel_url": "http://0.0.0.0:3000/payments/create"
+  },
+  "transactions": [{
+    "amount": {
+      "total": "5.00",
+      "currency": "USD"
+    },
+    "description": "My awesome payment"
+  }]
+};
+
+/**
+ * Create a Payment
+ */
+exports.create = function(req, res) {
+  /*var payment = new Payment(req.body);
+  payment.user = req.user;
+
+  payment.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(payment);
+    }
+  });*/
+  paypal.payment.create(payment, function (error, payment) {
+  if (error) {
+    console.log("error came");
+    console.log(error);
+  } else {
+      console.log("else portion");
+      if(payment.payer.payment_method === 'paypal') {
+      req.session.paymentId = payment.id;
+      var redirectUrl;
+      for(var i=0; i < payment.links.length; i++) {
+        var link = payment.links[i];
+        if (link.method === 'REDIRECT') {
+          redirectUrl = link.href;
+        }
+      }
+      console.log("redirect"+redirectUrl);
+      res.redirect(redirectUrl);
+    }
+  }
+});
+
+};
+
+
+exports.save = function(req, res) {
+  var payment = new Payment(req.body);
+  payment.user = req.user;
+
+  payment.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.jsonp(payment);
+    }
+  });
+
+};
+
+
+https://techpituwa.wordpress.com/2015/06/06/mean-js-pagination-with-angular-ui-bootstrap/

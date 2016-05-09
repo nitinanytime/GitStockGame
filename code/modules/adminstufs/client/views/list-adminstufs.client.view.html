@@ -1,0 +1,86 @@
+<section>
+ 
+
+
+  <div class="page-header">
+    <h1>Adminstufs</h1>
+  </div>
+
+                     <div class="inbox-mail">
+                  <div class="col-md-4 compose">
+                   
+                      <h2>Admin Stufs</h2>
+                            <nav class="nav-sidebar">
+                            <ul class="nav tabs">
+                              <li class="active"><a ng-click="vm.type = null" data-toggle="tab"><i class="fa fa-inbox"></i>All <span>{{vm.adminstufs.length}}</span><div class="clearfix"></div></a></li>
+                              <li class=""><a ng-click="vm.type = 'balance'" data-toggle="tab"><i class="fa fa-share-square-o"></i>balance</a></li>
+                              <li class=""><a ng-click="vm.type = 'winning_rule'" data-toggle="tab"><i class="fa fa-star-o"></i>winning_rule</a></li> 
+                              <li class=""><a ng-click="vm.type = 'withdraw'" data-toggle="tab"><i class="fa fa-pencil-square-o"></i>withdraw request <span>6</span><div class="clearfix"></div></a></li>  
+                              <li class=""><a ng-click="vm.type = 'Closed'" data-toggle="tab"><i class="fa fa-trash-o"></i>Closed</a></li>                              
+                            </ul>
+                          </nav>
+                                <!--<div class="content-box">
+                                  <ul>
+                                  <li><span>Folder</span></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Tasks</a></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Jobs</a></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Client</a></li>
+                                  </ul>
+                                </div>-->
+                                
+                            </div>
+                            <!-- tab content -->
+                            <div class="col-md-8 tab-content tab-content-in">
+                            <div class="tab-pane active text-style" id="tab1">
+
+                              <div class="inbox-right">
+                                  
+                        <div class="mailbox-content">
+                          <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" name="search" class="form-control2 input-search" placeholder="Search...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                <table class="table">
+
+                    <tbody>
+
+                        <tr class="table-row" ng-repeat="adminstuf in vm.filterType(vm.adminstufs)">
+                            <td class="table-img">
+                               <h6>{{adminstuf.key}}</h6>
+                            </td>
+                            <td class="table-text">
+                              <h6>{{adminstuf.value_1}}</h6>
+                                <h6>{{adminstuf.value_2}}</h6>
+                            </td>
+                            <td>
+                              <span ng-class="{'fam': adminstuf.type == 'balance' , 
+                              'work': adminstuf.type == 'winning_rule',
+                              'ur': adminstuf.type == 'cancel'}" >
+                              {{adminstuf.type}}</span>
+                            </td>
+                            <td class="march">
+                                <input type="checkbox" ng-model="adminstuf.active"></input>
+                            </td>
+                          
+                             <td >
+               <a class="btn green fifth" data-ui-sref="adminstufs.view({ adminstufId: adminstuf._id })">Detail</a>
+                            </td>
+                        </tr>
+                      
+                    </tbody>
+                </table>
+               </div>
+            </div>
+</div>
+</div></div><div class="clearfix"></div>
+  
+
+
+  <div class="alert alert-warning text-center" data-ng-if="vm.adminstufs.$resolved && !vm.adminstufs.length">
+    No Adminstufs yet, why don't you <a data-ui-sref="adminstufs.create">create one</a>?
+  </div>
+</section>

@@ -1,0 +1,130 @@
+<section>
+  <div class="page-header">
+    <h1 data-ng-bind="vm.lineup.name"></h1>
+  </div>
+  <div class="pull-right"
+       data-ng-show="vm.lineup.isCurrentUserOwner">
+    <a class="btn btn-primary" ng-click=vm.saveLineup();>
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" data-ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span data-ng-bind="vm.lineup.created | date:'mediumDate'"></span>
+      by
+      <span data-ng-if="vm.lineup.user"
+            data-ng-bind="vm.lineup.user.displayName"></span>
+      <span data-ng-if="!vm.lineup.user">Deleted User</span>
+    </em>
+  </small>
+  <p class="lead" data-ng-bind="vm.calculateLineup_money() | setDecimal:2"></p>
+
+<modal title="Login form" visible="vm.buyStockModel" >
+      <form role="form" ng-submit="vm.buyStockSave()">
+        <div class="form-group">
+          <label for="email">Stock Units</label>
+          <input type="text" class="form-control"  ng-model="vm.newStockline.stock_unit"/>
+        </div>
+
+        <div class="form-group">
+          <label for="checked">Check For set as Dilute</label>
+          <input type="checkbox" class="form-control"  ng-model="vm.newStockline.checked"  />
+        </div>
+        
+        <div class="form-group">
+          <label for="comment">Comment</label>
+          <input type="text" class="form-control"  ng-model="vm.newStockline.comment"  />
+        </div>
+       
+       <div class="form-group">
+          <h3>Calculated Price - {{(vm.newStockline.stock.Last) * (vm.newStockline.stock_unit)}}</h3>
+        </div>
+        <!--<div class="form-group">
+          <h3>Balance Money - {{(vm.lineup_money) - ((vm.newStockline.stock.Last) * (vm.newStockline.stock_unit))}}</h3>
+        </div>-->
+        <button type="submit" class="btn btn-success">Buy</button>
+        <button class="btn btn-default" ng-click="regtoggleModal()" >Registration</button>
+
+      </form>
+    </modal>
+
+     <modal title="Login form" visible="vm.sellStockModel" >
+      <form role="form" ng-submit="vm.sellStockSave()">
+        <div class="form-group">
+          <label for="email">Stock Units</label>
+          <input type="text" class="form-control"  ng-model="vm.newStockline.stock_unit"/>
+        </div>
+
+        <div class="form-group">
+          <label for="checked">Check For set as Dilute</label>
+          <input type="checkbox" class="form-control"  ng-model="vm.newStockline.checked"  />
+        </div>
+        
+        <div class="form-group">
+          <label for="comment">Comment</label>
+          <input type="text" class="form-control"  ng-model="vm.newStockline.comment"  />
+        </div>
+       
+       <div class="form-group">
+          <h3>Calculated Price -> {{(vm.newStockline.stock.Last) * (vm.newStockline.stock_unit) | setDecimal:2}}</h3>
+        </div>
+        <!--<div class="form-group">
+          <h3>Balance Money -> {{(vm.lineup_money) + ((vm.newStockline.stock.Last) * (vm.old_stock_unit - vm.newStockline.stock_unit))}}</h3>
+        </div>-->
+        <button type="submit" class="btn btn-success">Save</button>
+        
+
+      </form>
+    </modal>
+
+  <div class="col-md-7 list-group" >
+  <h4  >Stock List</h4>
+
+                              <div class="graph" style="font-size:1.20em">
+                              <div class="tables">
+                                <table class="table table-hover">
+                                <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" ng-model="searchStock" name="search" class="form-control2 input-search" placeholder="Search...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                       <thead> <tr> <th>Stock Symbol</th> <th> Name</th> <th>Stock Rate</th> <th>Last Rate</th> <th>Change</th> <th>Buy</th> </tr> </thead> <tbody> <tr  data-ng-repeat="stock in vm.stocks | filter:searchStock | limitTo:10" 
+       > <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{stock.Symbol}}</th> <td>{{stock.Name}}</td> <td>{{stock.Market}}</td> <td>{{stock.Last}}</td> 
+       <td  ng-if="stock.ChangeFromPreviousClose < 0" style="color:red;">{{stock.ChangeFromPreviousClose}}</td>
+       <td  ng-if="stock.ChangeFromPreviousClose >= 0" style="color:green;">{{stock.ChangeFromPreviousClose}}</td> 
+        <td><span style="font-size: 1.5em;" class="fam"  data-ng-click="vm.buyThisStock(stock)">+</span></td></tr> </tbody> </table> 
+                              </div>
+                        
+                          </div>
+</div>
+
+ <div class="col-md-5 list-group" style="float:right;">
+  <h4  >My LineUp</h4>
+
+                              <div class="graph" style="font-size:1.20em">
+                                <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" ng-model="searchStockLineUp" name="search" class="form-control2 input-search" placeholder="Search...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                              <div class="tables" style="overflow-y:scroll; height:550px;">
+                                <table class="table table-hover">
+                              
+                       <thead> <tr> <th> </th> <th>Stock Symbol</th> <th>Shares</th> <th>Value</th> <th>Sell</th> </tr> </thead> <tbody> <tr  data-ng-repeat="linup in vm.lineup.line | filter:searchStockLineUp | limitTo:20" 
+       > <td><input type="checkbox" ng-model="linup.checked"></input></td> <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{linup.stock.Symbol}}</th> <td>{{linup.stock_unit}}</td> <td>{{(linup.stock_unit)*(linup.stock.Last)}}</td>  <td><span style="font-size: 1.5em;" data-ng-click="vm.sellThisStock(linup.stock)" class="fam">X</span></td></tr> </tbody> </table> 
+                              </div>
+                        
+                          </div>
+</div>
+<div class="clearfix"></div>
+</section>

@@ -6,10 +6,10 @@
     .module('games')
     .controller('GamesController', GamesController);
 
-  GamesController.$inject = ['$scope', '$state', 'Authentication', 'gameResolve', 'playerResolve', 'playermoveResolve', 'StocksService', 'PlayersService', 'PlayermovesService'];
+  GamesController.$inject = ['$scope', '$state', 'Users', 'Authentication', 'gameResolve', 'playerResolve', 'playermoveResolve', 'StocksService', 'PlayersService', 'PlayermovesService', 'LineupsService', 'AdminstufsService'];
 
 
-  function GamesController ($scope, $state, Authentication, game, player, playermove, StocksService, PlayersService, PlayermovesService) {
+  function GamesController ($scope, $state, Users, Authentication, game, player, playermove, StocksService, PlayersService, PlayermovesService, LineupsService, AdminstufsService) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -29,17 +29,36 @@
     vm.buyStockSave = buyStockSave;
     vm.sellStockSave = sellStockSave;
     vm.playermove= playermove;
-    vm.getPlayerMoves = getPlayerMoves;
 
-    vm.playerStockModel = false;
-    vm.playerMoveModel=false;
-    
+
+    vm.getPlayerLineup = getPlayerLineup;
+    vm.playerLineupModel = false;
+    vm.importLineup = importLineup;
+
+    vm.old_stock_unit = 0;
+    vm.remain_balance = 0;
+
+    vm.private = false;
+    vm.running_value = 0;
+
     $scope.demo1 = {
     min: 20,
     max: 80
 };
 
-    alert(vm.game._id);
+  AdminstufsService.query({
+      type: 'winning_rule',
+      active: true
+    }, function (data) {
+      // body...
+      vm.winningRules = data;
+      console.log('winning rule' + vm.winningRules);
+      
+    });
+
+  
+  
+   // alert(vm.game._id);
     console.log(game.game_startTime);
     
     PlayersService.query({
@@ -53,6 +72,7 @@
         if(vm.players[i].player_username===vm.authentication.user.username){
           console.log('match');
           vm.player = vm.players[i];
+          getPlayerMoves(null);
         }
         console.log(vm.player);
       }
@@ -60,7 +80,13 @@
     });
 
     
-
+    $scope.privateGame = function() {
+   if(vm.game.game_type === 'private'){
+    vm.private = true;
+   }else{
+    vm.private = false;
+   }
+  };
     
     // Remove existing Game
     function remove() {
@@ -77,25 +103,43 @@
     }, function (data) {
       // body...
       console.log(data);
-      vm.playerStocks = [];
+      vm.playerStocks = data;
+      vm.player.player_money = vm.game.game_money;
+      for(var i = 0; i < data.length; i++){
 
+        vm.player.player_money = vm.player.player_money - (data[i].stock_unit * data[i].stock.Last);
+       
+      }
+      console.log('value'+ vm.game.game_money + parseFloat(vm.player.player_money).toFixed(2));
+      vm.running_value = vm.game.game_money - parseFloat(vm.player.player_money).toFixed(2);
+      /* vm.playerStocks = [];
+     var stockSymbol = [];
       for(var i = 0; i < data.length; i++){
         var symbol = data [i].stock.Symbol;
         var count = 0;
-        for(var j = 0; j < data.length; j++){
+        var money = 0;
+        console.log(stockSymbol.indexOf(symbol));
+        if (stockSymbol.indexOf(symbol)<0) {
+          for(var j = 0; j < data.length; j++){
           if(symbol === data[j].stock.Symbol){
             if(data[j].type === 'BUY'){
               console.log(data[j].stock_unit);
             count = count + data[j].stock_unit;
+            money = money + data[j].total_money;
           }
             else{
               count = count - data[j].stock_unit;
+              money = money - data[j].total_money;
             }
 
           }
 
         }
-        vm.playerStocks.push({'Symbol':symbol,'Count':count});
+        vm.playerStocks.push({'Symbol':symbol,'Count':count, 'Money':money});
+        stockSymbol.push(symbol);
+        };
+        
+        
       }
 
       console.log(vm.playerStocks);
@@ -108,10 +152,55 @@
           vm.playerMoveModel = !vm.playerMoveModel;
         }
       
-      
+      */
       
     });
     }
+
+    function getPlayerLineup(){
+      LineupsService.query({
+      user: vm.authentication.user._id
+    }, function (data) {
+      // body...
+      console.log(data);
+      vm.lineups = data;
+      vm.playerLineupModel = !vm.playerLineupModel;
+      
+    });
+    }
+
+    function importLineup(lineup){
+
+      console.log(lineup);
+      PlayermovesService.query({
+      player: vm.player._id
+    }, function (data) {
+      for(var i = 0; i < data.length; i++){
+
+        vm.playermove = data[i];
+        vm.playermove.$delete(null,null);
+        
+      }
+      var newplayermove = playermove;
+      for(var j = 0; j < lineup.line.length; j++){
+
+      vm.playermove = new PlayermovesService();
+      vm.playermove.stock_price = lineup.line[j].stock.Last;
+      vm.playermove.type = 'BUY';
+      vm.playermove.stock_unit = lineup.line[j].stock_unit;
+      vm.playermove.total_money = lineup.line[j].stock_unit * lineup.line[j].stock.Last;
+      vm.playermove.player = vm.player._id;
+      vm.playermove.stock = lineup.line[j].stock._id;
+      vm.playermove.checked = lineup.line[j].checked;
+
+      vm.playermove.$save(null, null);
+
+
+      }
+    });
+
+    }
+
 
 
     // Save Game
@@ -139,7 +228,17 @@
         console.log('Game reduce');
         console.log(vm.game.game_player);
       //  vm.game.$update(null,null); 
+      //vm.authentication.user.user_balance = vm.authentication.user.user_balance - vm.game.game_EntryFee;
+      //updateUser(vm.authentication.user)
       }
+
+      function updateUser(userObject){
+        var user = new Users(userObject);
+
+      user.$update(null, null);
+      }
+
+
       function errorCallback(res) {
         vm.error = res.data.message;
         alert(res.data.message);
@@ -151,67 +250,42 @@
     // Save Game
   function buyThisStock(stock){
     console.log(stock);
+    PlayermovesService.query({
+      player: vm.player._id
+    }, function (data) {
 
-    vm.playermove.stock = stock;
-    vm.playermove.game = vm.game._id;
-    vm.playermove.stock_unit = 1;
+      var newStock = true;
+      for(var i = 0; i < data.length; i++){
 
-    vm.buyStockModel = !vm.buyStockModel;
+        if(stock.Symbol == data[i].stock.Symbol){
+          vm.playermove = data[i];
+          vm.old_stock_unit = data[i].stock_unit;
+          vm.sellStockModel = !vm.sellStockModel;
+          newStock = false;
+        }
+      }
+      if(newStock){
+          vm.playermove = new PlayermovesService();
+          vm.playermove.stock = stock;
+          vm.playermove.game = vm.game._id;
+          vm.playermove.stock_unit = 1;
+          vm.old_stock_unit = vm.playermove.stock_unit;
+          vm.buyStockModel = !vm.buyStockModel;
 
+      }
+    });
+    
     }
 
     function buyStockSave(){
       console.log(vm.playermove);
-      
+      var remain_balance= (vm.player.player_money) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit));
+       if(remain_balance<0){
+        alert("Balance required");
+        return false;
+      }
       vm.playermove.stock_price = vm.playermove.stock.Last;
       vm.playermove.type = 'BUY';
-      vm.playermove.total_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
-      vm.playermove.player = vm.player._id;
-      vm.playermove.stock = vm.playermove.stock._id;
-
-      vm.playermove.$save(successCallback, errorCallback);
-
-      updatePlayer();
-      function updatePlayer(){
-        vm.player.player_money = vm.player.player_money - vm.playermove.total_money;
-        vm.player.$update(successCallback, errorCallback);
-      }
-      function successCallback(res) {
-        vm.buyStockModel = !vm.buyStockModel;
-      }
-
-      function errorCallback(res) {
-        vm.error = res.data.message;
-        console.log(vm.error);
-      }
-
-    }
-
-    function sellThisStock(Symbol){
-    console.log(Symbol);
-    vm.playerStockModel = !vm.playerStockModel;
-    StocksService.query({
-      stock: Symbol
-    }, function (data) {
-      // body...
-      console.log(data);
-      vm.playermove.stock = data[0];
-      vm.playermove.game = vm.game._id;
-      vm.playermove.stock_unit = 1;
-      vm.sellStockModel = !vm.sellStockModel;
-      
-    });
-    
-
-    
-
-    }
-
-    function sellStockSave(){
-      console.log(vm.playermove);
-      
-      vm.playermove.stock_price = vm.playermove.stock.Last;
-      vm.playermove.type = 'SELL';
       vm.playermove.total_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
       vm.playermove.player = vm.player._id;
       vm.playermove.stock = vm.playermove.stock._id;
@@ -220,11 +294,12 @@
 
       updatePlayer();
       function updatePlayer(){
-        vm.player.player_money = vm.player.player_money + vm.playermove.total_money;
+        vm.player.player_money = remain_balance;
         vm.player.$update(successCallback, errorCallback);
       }
       function successCallback(res) {
-        vm.sellStockModel = !vm.sellStockModel;
+        vm.buyStockModel = !vm.buyStockModel;
+        getPlayerMoves(null);
       }
 
       function errorCallback(res) {
@@ -234,9 +309,55 @@
 
     }
 
-    function doNothing(){
-        
+    function sellThisStock(stock){
+    console.log(stock);
+    PlayermovesService.query({
+      player: vm.player._id
+    }, function (data) {
+      for(var i = 0; i < data.length; i++){
+
+        if(stock.Symbol == data[i].stock.Symbol){
+          vm.playermove = data[i];
+
+          vm.old_stock_unit = data[i].stock_unit;
+          vm.sellStockModel = !vm.sellStockModel;
+        }
       }
+    });
+      
+     // 
+    
+    }
+
+    function sellStockSave(){
+
+      var remain_balance= (vm.player.player_money) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit));
+       if(remain_balance<0){
+        alert("Balance required");
+        return false;
+      }
+      console.log(vm.playermove);
+      vm.playermove.stock_price = vm.playermove.stock.Last;
+      vm.playermove.total_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
+      console.log(vm.playermove);
+      vm.playermove.$update(null, null);
+
+      updatePlayer();
+      function updatePlayer(){
+        vm.player.player_money = remain_balance;
+        vm.player.$update(successCallback, errorCallback);
+      }
+      function successCallback(res) {
+        vm.sellStockModel = !vm.sellStockModel;
+        getPlayerMoves(null);
+      }
+
+      function errorCallback(res) {
+        vm.error = res.data.message;
+        console.log(vm.error);
+      }
+
+    }
 
 
 

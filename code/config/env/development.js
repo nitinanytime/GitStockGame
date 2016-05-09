@@ -35,8 +35,8 @@ module.exports = {
     title: defaultEnvConfig.app.title + ' - Development Environment'
   },
   facebook: {
-    clientID: process.env.FACEBOOK_ID || 'APP_ID',
-    clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
+    clientID: process.env.FACEBOOK_ID || '170643409952707',
+    clientSecret: process.env.FACEBOOK_SECRET || '624e491d5fe10aea479aac713f282368',
     callbackURL: '/api/auth/facebook/callback'
   },
   twitter: {
@@ -60,18 +60,18 @@ module.exports = {
     callbackURL: '/api/auth/github/callback'
   },
   paypal: {
-    clientID: process.env.PAYPAL_ID || 'CLIENT_ID',
-    clientSecret: process.env.PAYPAL_SECRET || 'CLIENT_SECRET',
+    clientID: process.env.PAYPAL_ID || 'AY4AM0VDtR_Ec_0WFziHubfRk04V84_dLPtBAxioCjknPf0Ufp_qL08KwO_IiumRkEPVtDkg_On-5Q9J',
+    clientSecret: process.env.PAYPAL_SECRET || 'EIEquePxE2BW4oQXe8bkTIRnWj9AH30jiZXab4J8XGjosCGFHftmjeQRbmXOxfE9lGlw6YwYMMJg0yBC',
     callbackURL: '/api/auth/paypal/callback',
     sandbox: true
   },
   mailer: {
-    from: process.env.MAILER_FROM || 'MAILER_FROM',
+    from: process.env.MAILER_FROM || 'Nitin Dwivedi',
     options: {
-      service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
+      service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
       auth: {
-        user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
-        pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+        user: process.env.MAILER_EMAIL_ID || 'nitinanytime@gmail.com',
+        pass: process.env.MAILER_PASSWORD || '9589901807'
       }
     }
   },

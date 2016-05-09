@@ -44,6 +44,21 @@ var UserSchema = new Schema({
     type: String,
     trim: true
   },
+  user_rank: {
+    type: Number,
+    default: 0,
+    trim: true
+  },
+  user_points: {
+    type: Number,
+    default: 0,
+    trim: true
+  },
+  user_balance: {
+    type: Number,
+    default: 10,
+    trim: true
+  },
   email: {
     type: String,
     unique: true,

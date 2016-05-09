@@ -9,13 +9,6 @@ var config = require('../config'),
   chalk = require('chalk'),
   seed = require('./seed');
 
-  var cron = require('node-schedule');
-/* run the job at 18:55:30 on Dec. 14 2018*/
-var rule = new cron.RecurrenceRule();
-rule.second = 30;
-cron.scheduleJob(rule, function(){
-    console.log(new Date(), 'The 30th second of the minute.');
-});
 
 function seedDB() {
   if (config.seedDB && config.seedDB.seed) {

@@ -1,4 +1,6 @@
 <section>
+<div id="fb-root"></div>
+
   <div class="page-header">
     <h1 ng-bind="vm.article.title"></h1>
   </div>
@@ -12,7 +14,7 @@
   </div>
   <small>
     <em class="text-muted">
-      Posted on
+      Posted on h
       <span ng-bind="vm.article.created | date:'mediumDate'"></span>
       by
       <span ng-if="vm.article.user" ng-bind="vm.article.user.displayName"></span>
@@ -20,4 +22,7 @@
     </em>
   </small>
   <p class="lead" ng-bind="vm.article.content"></p>
+<div style="margin-left: 20%;">
+<div class="fb-comments" dyn-fb-comment-box page-href="" data-numposts="5" data-colorscheme="light" data-width="100%"></div>
+</div>
 </section>

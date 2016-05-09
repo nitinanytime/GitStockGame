@@ -67,7 +67,9 @@
     "validator": "~4.8.0",
     "node-schedule": "~1.1.0",
     "source-map": "~0.5.3",
-    "ngstorage": "~0.3.10"
+    "ngstorage": "~0.3.10",
+    "angularcountdown": "~0.1.1",
+    "paypal-rest-sdk": "~1.6.8"
   },
   "devDependencies": {
     "coveralls": "~2.11.6",

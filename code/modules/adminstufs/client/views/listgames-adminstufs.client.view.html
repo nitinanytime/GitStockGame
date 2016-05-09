@@ -1,0 +1,100 @@
+<section data-ng-init="vm.getGames()">
+
+
+  <div class="page-header">
+    <h1>Games</h1>
+  </div>
+
+                     <div class="inbox-mail">
+                  <div class="col-md-4 compose">
+                    <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" name="search" class="form-control2 input-search" placeholder="Search...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                      <h2>Compose</h2>
+                            <nav class="nav-sidebar">
+                            <ul class="nav tabs">
+                              <li class="active"><a ng-click="vm.status = null" data-toggle="tab"><i class="fa fa-inbox"></i>All Games <span>{{vm.games.length}}</span><div class="clearfix"></div></a></li>
+                              <li class=""><a ng-click="vm.status = 'Open'" data-toggle="tab"><i class="fa fa-share-square-o"></i> Own Me</a></li>
+                              <li class=""><a ng-click="vm.status = 'Open'" data-toggle="tab"><i class="fa fa-star-o"></i>Open</a></li> 
+                              <li class=""><a ng-click="vm.status = 'Running'" data-toggle="tab"><i class="fa fa-pencil-square-o"></i>Running <span>6</span><div class="clearfix"></div></a></li>  
+                              <li class=""><a ng-click="vm.status = 'Closed'" data-toggle="tab"><i class="fa fa-trash-o"></i>Closed</a></li>                              
+                            </ul>
+                          </nav>
+                                <!--<div class="content-box">
+                                  <ul>
+                                  <li><span>Folder</span></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Tasks</a></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Jobs</a></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Client</a></li>
+                                  </ul>
+                                </div>-->
+                                
+                            </div>
+                            <!-- tab content -->
+                            <div class="col-md-8 tab-content tab-content-in">
+                            <div class="tab-pane active text-style" id="tab1">
+                              <div class="inbox-right">
+                                  
+                        <div class="mailbox-content">
+                         <uib-pagination total-items="vm.totalItems" ng-model="vm.currentPage" ng-change="vm.pageChanged()"></uib-pagination> 
+                <table class="table">
+                    <tbody>
+                        <tr class="table-row" ng-repeat="game in vm.filterStatus(vm.games)">
+                            <td class="table-img">
+                               <img src="https://lh3.googleusercontent.com/jTvV_FWI-VqQVS5o1ira-VnauuStEtqWmdXbZSSUVvJGo-91P6JLb3mZYUBdbUpHQC3RguoS=s50-h50-e365" alt="" />
+                            </td>
+                            <td class="table-text">
+                              <h6>{{game.game_name}}</h6>
+                                <p>Entry Fee - {{game.game_EntryFee}}</p>
+                            </td>
+                            <td>
+                              <span ng-class="{'fam': game.game_status == 'Open' , 
+                              'work': game.game_status == 'Running',
+                              'ur': game.game_status == 'Closed'}" >
+                              {{game.game_status}}</span>
+                            </td>
+                            <td class="march">
+                                {{game.game_startTime}}
+                            </td>
+                          
+                             <td >
+               <a class="btn green fifth" data-ui-sref="games.view({ gameId: game._id })">Enter</a>
+                            </td>
+                        </tr>
+                      
+                    </tbody>
+                </table>
+               </div>
+            </div>
+</div>
+
+
+ 
+
+
+</div>
+
+</div><div class="clearfix"></div>
+  <!--<div class="list-group">
+    <a data-ng-repeat="game in vm.games"
+       data-ui-sref="games.view({ gameId: game._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Game Created
+        <span data-ng-bind="game.created | date:'mediumDate'"></span>
+        Name
+        <span data-ng-if="game.user" data-ng-bind="game.user.displayName"></span>
+        <span data-ng-if="!game.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="game.game_name"></h4>
+    </a>
+  </div>-->
+  <div class="alert alert-warning text-center" data-ng-if="vm.games.$resolved && !vm.games.length">
+    No Games yet, why don't you <a data-ui-sref="games.create">create one</a>?
+  </div>
+</section>

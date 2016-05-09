@@ -7,13 +7,13 @@
        data-ui-sref="players.view({ playerId: player._id })"
        class="list-group-item">
       <small class="list-group-item-text">
-        Posted on
+        Joined on
         <span data-ng-bind="player.created | date:'mediumDate'"></span>
         by
         <span data-ng-if="player.user" data-ng-bind="player.user.displayName"></span>
         <span data-ng-if="!player.user">Deleted User</span>
       </small>
-      <h4 class="list-group-item-heading" data-ng-bind="player.name"></h4>
+      <h4 class="list-group-item-heading" data-ng-bind="player.game.game_name"></h4>
     </a>
   </div>
   <div class="alert alert-warning text-center" data-ng-if="vm.players.$resolved && !vm.players.length">

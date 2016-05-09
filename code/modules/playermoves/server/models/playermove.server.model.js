@@ -35,6 +35,11 @@ var PlayermoveSchema = new Schema({
     required: 'Please fill Playermove total_money',
     trim: true
   },
+  checked: {
+    type: Boolean,
+    default: false,
+    trim: true
+  },
   created: {
     type: Date,
     default: Date.now

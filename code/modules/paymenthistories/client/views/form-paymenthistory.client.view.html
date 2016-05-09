@@ -1,0 +1,95 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.paymenthistory._id ? 'Edit Paymenthistory' : 'New Paymenthistory'}}</h1>
+  </div>
+
+   <modal title="Confirmation" visible="vm.paynow" >
+     <h3>{{vm.message}}</h3>
+      <a class="btn green fifth" href="{{vm.payUrl}}">Confirm</a>
+    </modal>
+
+  <div class="col-md-12">
+    <form name="vm.form.paymenthistoryForm" class="form-horizontal" ng-submit="vm.save(vm.form.paymenthistoryForm.$valid)" novalidate>
+      <fieldset>
+
+
+      <div class="form-group" show-errors>
+          <label class="control-label" for="amount">Amount</label>
+          <input name="amount" type="number" ng-model="vm.paymenthistory.amount" id="amount" class="form-control" placeholder="amount" required>
+          <div ng-messages="vm.form.paymenthistoryForm.amount.$error" role="alert">
+            <p class="help-block error-text" ng-message="required"> Money is required.</p>
+          </div>
+      </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="payment_method">payment_method</label>
+          
+        <select name="payment_method" ng-model="vm.paymenthistory.payment_method" id="payment_method" ng-change="paymentMethod()" required>
+      <option value="paypal">paypal</option>
+      <option value="credit_card">credit_card</option>
+        </select>
+
+          <div ng-messages="vm.form.paymenthistoryForm.payment_method.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">payment_method is required.</p>
+          </div>
+          </div>
+
+
+        <div class="form-group" style="margin-left:45px;" ng-show="vm.creditCard" >
+          <div class="form-group">
+          <label for="email">Credit Card Number</label>
+          <input type="number" class="form-control"  ng-model="vm.credit_card.number"/>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Type</label>
+          <select name="type" ng-model="vm.credit_card.type">
+      <option value="visa">VISA</option>
+      <option value="mastercard">MASTER CARD</option>
+    </select>
+        </div>
+
+        <div class="form-group">
+          <label for="expire_month">Expire Month</label>
+          <input type="number" class="form-control"  ng-model="vm.credit_card.expire_month"/>
+        </div>
+
+        <div class="form-group">
+          <label for="expire_year">Expire Year</label>
+          <input type="number" class="form-control"  ng-model="vm.credit_card.expire_year"/>
+        </div>
+
+        <div class="form-group">
+          <label for="cvv2">CVV</label>
+          <input type="number" class="form-control"  ng-model="vm.credit_card.cvv2"/>
+        </div>
+
+        <div class="form-group">
+          <label for="email">first_name</label>
+          <input type="text" class="form-control"  ng-model="vm.credit_card.first_name"/>
+        </div>
+
+        <div class="form-group">
+          <label for="email">last name</label>
+          <input type="text" class="form-control"  ng-model="vm.credit_card.last_name"/>
+        </div>
+
+
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="description">Description</label>
+          <input name="description" type="text" ng-model="vm.paymenthistory.description" id="description" class="form-control" placeholder="description" required>
+      </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.paymenthistory._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

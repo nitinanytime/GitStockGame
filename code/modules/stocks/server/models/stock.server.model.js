@@ -12,13 +12,14 @@ var mongoose = require('mongoose'),
 var StockSchema = new Schema({
   Symbol: {
     type: String,
+    unique: true,
     default: '',
     required: 'Please fill Symbol',
     trim: true
   },
   Name: {
     type: String,
-    default: '',
+    default: ' ',
     required: 'Please fill Stock Name',
     trim: true
   },
@@ -137,7 +138,7 @@ var StockSchema = new Schema({
     trim: true
   },
   Time: {
-    type: Date,
+    type: String,
     default: Date.now,
     required: 'Please fill Stock Time',
     trim: true
@@ -145,10 +146,6 @@ var StockSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
-  },
-  user: {
-    type: Schema.ObjectId,
-    ref: 'User'
   }
 });
 

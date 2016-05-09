@@ -1,7 +1,7 @@
  <!--/sidebar-menu-->
         <div class="sidebar-menu" ng-controller="HomeController">
           <header class="logo">
-          <a href="#" ng-click="slide();" class="sidebar-icon"> <span class="fa fa-bars"></span> </a> <a href="index.html"> <span id="logo"> <h1>Augment</h1></span> 
+          <a href="#" ng-click="slide();" class="sidebar-icon"> <span class="fa fa-bars"></span> </a> <a href="index.html"> <span id="logo"> <h1>StockGame</h1></span> 
           <!--<img id="logo" src="" alt="Logo"/>--> 
           </a> 
 
@@ -9,25 +9,25 @@
 
       <div style="border-top:1px solid rgba(69, 74, 84, 0.7)"></div>
       <!--/down-->
-              <div class="down">  
-                    <a href="index.html"><img src="images/admin.jpg"></a>
-                    <a href="index.html"><span class=" name-caret">Jasmin Leo</span></a>
+              <div class="down" ng-show="authentication.user">  
+                    <a href="index.html"><img ng-src="{{authentication.user.profileImageURL}}"></a>
+                    <a href="index.html"><span class=" name-caret">{{authentication.user.displayName}}</span></a>
                    <p>System Administrator in Company</p>
                   <ul>
-                  <li><a class="tooltips" href="index.html"><span>Profile</span><i class="lnr lnr-user"></i></a></li>
-                    <li><a class="tooltips" href="index.html"><span>Settings</span><i class="lnr lnr-cog"></i></a></li>
-                    <li><a class="tooltips" href="index.html"><span>Log out</span><i class="lnr lnr-power-switch"></i></a></li>
+                  <li><a class="tooltips" href="/settings/picture"><span>Profile</span><i class="lnr lnr-user"></i></a></li>
+                    <li><a class="tooltips" href="/settings/profile"><span>Settings</span><i class="lnr lnr-cog"></i></a></li>
+                    <li><a class="tooltips" href="/api/auth/signout" target="_self"><span>Log out</span><i class="lnr lnr-power-switch"></i></a></li>
                     </ul>
                   </div>
                  <!--//down-->
                            <div class="menu">
                   <ul id="menu" >
-                    <li><a href="index.html"><i class="fa fa-tachometer"></i> <span>Dashboard</span></a></li>
-                     <li id="menu-academico" ><a href="#"><i class="fa fa-table"></i> <span> Tabs &amp; Panels</span> <span class="fa fa-angle-right" style="float: right"></span></a>
+                    <li><a href="/games"><i class="fa fa-tachometer"></i> <span>Games</span></a></li>
+                     <li id="menu-academico" ><a href="/lineups"><i class="fa fa-table"></i> <span> LineUps</span> <span class="fa fa-angle-right" style="float: right"></span></a>
                        <ul id="menu-academico-sub" >
-                      <li id="menu-academico-avaliacoes" ><a href="tabs.html"> Tabs &amp; Panels</a></li>
-                      <li id="menu-academico-boletim" ><a href="widget.html">Widgets</a></li>
-                      <li id="menu-academico-avaliacoes" ><a href="calender.html">Calendar</a></li>
+                      <li id="menu-academico-avaliacoes" ><a href="/lineups"> My LineUps</a></li>
+                      <li id="menu-academico-boletim" ><a href="/lineups/create">Create LineUp</a></li>
+                     
                       
                       </ul>
                     </li>

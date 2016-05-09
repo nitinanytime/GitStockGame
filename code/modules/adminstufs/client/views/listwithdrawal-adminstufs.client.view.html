@@ -1,0 +1,77 @@
+<section>
+  
+
+
+  <div class="page-header">
+    <h1>Paymenthistories</h1>
+  </div>
+
+                     <div class="inbox-mail">
+                  <div class="col-md-4 compose">
+                   
+                      <h2>Compose</h2>
+                            <nav class="nav-sidebar">
+                            <ul class="nav tabs">
+                              <li class="active"><a ng-click="vm.status = null" data-toggle="tab"><i class="fa fa-inbox"></i>All Payments <span>{{vm.paymenthistories.length}}</span><div class="clearfix"></div></a></li>
+                              <li class=""><a ng-click="vm.status = 'Requested'" data-toggle="tab"><i class="fa fa-share-square-o"></i> Requested</a></li>
+                              <li class=""><a ng-click="vm.status = 'success'" data-toggle="tab"><i class="fa fa-star-o"></i>success</a></li> 
+                              <li class=""><a ng-click="vm.status = 'cancel'" data-toggle="tab"><i class="fa fa-pencil-square-o"></i>cancel <span>6</span><div class="clearfix"></div></a></li>  
+                              <li class=""><a ng-click="vm.status = 'Closed'" data-toggle="tab"><i class="fa fa-trash-o"></i>Closed</a></li>                              
+                            </ul>
+                          </nav>
+                                <!--<div class="content-box">
+                                  <ul>
+                                  <li><span>Folder</span></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Tasks</a></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Jobs</a></li>
+                                  <li><a href="#"><i class="fa fa-folder-o"></i>Client</a></li>
+                                  </ul>
+                                </div>-->
+                                
+                            </div>
+                            <!-- tab content -->
+                            <div class="col-md-8 tab-content tab-content-in">
+                            <div class="tab-pane active text-style" id="tab1">
+                              <div class="inbox-right">
+                                  
+                        <div class="mailbox-content">
+                          
+                <table class="table">
+                    <tbody>
+                        <tr class="table-row" ng-repeat="paymenthistory in vm.filterStatus(vm.paymenthistories)">
+                            <td class="table-img">
+                              <img src="images/ArrowUp.png" ng-if="paymenthistory.type == 'credit'" alt="{{paymenthistory.description}}" />
+                              <img src="images/ArrowDown.jpg" ng-if="paymenthistory.type == 'debit'" alt="{{paymenthistory.description}}" />
+                               <h6>{{paymenthistory.type}}</h6>
+                            </td>
+                            <td class="table-text">
+                              <h6>{{paymenthistory.amount}}</h6>
+                                <p>{{paymenthistory.payment_method}}</p>
+                            </td>
+                            <td>
+                              <span ng-class="{'fam': paymenthistory.status == 'Requested' , 
+                              'work': paymenthistory.status == 'success',
+                              'ur': paymenthistory.status == 'cancel'}" >
+                              {{paymenthistory.status}}</span>
+                            </td>
+                            <td class="march">
+                                {{paymenthistory.created}}
+                            </td>
+                          
+                             <td >
+               <a class="btn green fifth" data-ui-sref="paymenthistories.view({ paymenthistoryId: paymenthistory._id })">Detail</a>
+                            </td>
+                        </tr>
+                      
+                    </tbody>
+                </table>
+
+                
+               </div>
+            </div>
+</div>
+</div></div><div class="clearfix"></div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.paymenthistories.$resolved && !vm.paymenthistories.length">
+    No Paymenthistories yet, why don't you <a data-ui-sref="paymenthistories.create">create one</a>?
+  </div>
+</section>

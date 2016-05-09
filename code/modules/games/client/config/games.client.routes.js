@@ -16,7 +16,7 @@
       })
       .state('games.list', {
         url: '',
-        templateUrl: 'modules/games/client/views/list-games.client.view.html',
+        templateUrl: 'modules/games/client/views/mygames-games.client.view.html',
         controller: 'GamesListController',
         controllerAs: 'vm',
         data: {
@@ -65,6 +65,16 @@
         },
         data:{
           pageTitle: 'Game {{ articleResolve.name }}'
+        }
+      })
+      .state('games.mygames', {
+        url: '/mygames',
+        templateUrl: 'modules/games/client/views/list-games.client.view.html',
+        controller: 'MyGamesController',
+        controllerAs: 'vm',
+        data: {
+          roles: ['user', 'admin'],
+          pageTitle : 'My Games'
         }
       });
   }

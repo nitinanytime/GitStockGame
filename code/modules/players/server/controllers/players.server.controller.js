@@ -6,6 +6,9 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Player = mongoose.model('Player'),
+  Game = mongoose.model('Game'),
+  User = mongoose.model('User'),
+  Paymenthistory = mongoose.model('Paymenthistory'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -22,6 +25,7 @@ exports.create = function(req, res) {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
+      updateGame(player);
       res.jsonp(player);
     }
   });
@@ -81,9 +85,9 @@ exports.delete = function(req, res) {
  * List of Players
  */
 exports.list = function(req, res) { 
-  //console.log("yes this is request parameter");
+  console.log("yes this is request parameter");
   console.log(req.query);
-  Player.find(req.query).sort('-created').populate('user', 'displayName').exec(function(err, players) {
+  Player.find(req.query).sort('-created').populate('user', 'displayName').populate('game').exec(function(err, players) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -117,3 +121,83 @@ exports.playerByID = function(req, res, next, id) {
     next();
   });
 };
+
+
+function updateGame(player){
+  //console.log(player);
+  var gameid = player.game;
+  Game.findById(gameid).exec(function (err, game) {
+      if (err) {
+      } else {
+        game.game_player = game.game_player + 1;
+        game.game_EntryMoney = game.game_EntryMoney + game.game_EntryFee; 
+
+        game.save(function(err) {
+          if (err) {
+        
+         console.log("message:" + errorHandler.getErrorMessage(err));
+       
+        } else {
+        updateUserBalance('SUBSTRACT', player.player_username, game, game.game_EntryFee);
+        console.log('Game Saved New Player added');
+        
+      }
+    });
+      }
+    });
+
+}
+
+
+function updateUserBalance(type, username, game, amount){
+    console.log(username);
+    User.find({'username':username}, '-salt -password').sort('-created').exec(function(err, users) {
+        if (err) {
+          console.log(err);
+        } else {
+           //console.log(users);
+          var user = users[0];
+          if(type === 'ADD'){
+            user.user_balance = user.user_balance + amount;
+          }else if(type === 'SUBSTRACT'){
+            user.user_balance = user.user_balance - amount;
+          }
+          
+
+          user.save(function(err) {
+          if (err) {
+            
+          } else {
+
+            var paymenthistory = new Paymenthistory();
+            
+            paymenthistory.amount = amount;
+            paymenthistory.payment_method = 'GameEntryFee' ; 
+            paymenthistory.type = 'debit';
+            paymenthistory.status = 'success';
+            paymenthistory.description = 'Game Entry Fee Money of ';
+            paymenthistory.game = game._id;
+            paymenthistory.user = user._id;
+            paymenthistory.username = user.username;
+
+            savePaymentHistory(paymenthistory);
+            console.log('successfully added to User account');
+          }
+        });
+        }
+      });
+  }
+
+  function savePaymentHistory(paymenthistory){
+
+    paymenthistory.save(function(err) {
+    if (err) {
+      
+    } else {
+      
+      console.log("next step");
+    }
+  });
+
+
+  }

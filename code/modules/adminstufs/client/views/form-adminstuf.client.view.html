@@ -1,0 +1,60 @@
+<section>
+  <div class="page-header">
+    <h1>{{vm.adminstuf._id ? 'Edit Adminstuf' : 'New Adminstuf'}}</h1>
+  </div>
+  <div class="col-md-12">
+    <form name="vm.form.adminstufForm" class="form-horizontal" ng-submit="vm.save(vm.form.adminstufForm.$valid)" novalidate>
+      <fieldset>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="type">Type Define</label>
+          
+          <select name="type" ng-model="vm.adminstuf.type" id="type" required>
+          <option value="winning_rule">winning_rule</option>
+          <option value="balance">balance</option>
+          </select>
+          <div ng-messages="vm.form.adminstufForm.type.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Adminstuf Type name is required.</p>
+          </div>
+        </div>
+
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="key">key Name</label>
+          <input name="key" type="text" ng-model="vm.adminstuf.key" id="key" class="form-control" placeholder="Key Name" required>
+          <div ng-messages="vm.form.adminstufForm.key.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Adminstuf key name is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="value_1">Value 1 String (optional)</label>
+          <input name="value_1" type="text" ng-model="vm.adminstuf.value_1" id="value_1" class="form-control" placeholder="Value">
+          <div ng-messages="vm.form.adminstufForm.value_1.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Adminstuf value_1 is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="value_2">Value 2 Number(optional)</label>
+          <input name="value_2" type="number" ng-model="vm.adminstuf.value_2" id="value_2" class="form-control" placeholder="Value" required>
+          <div ng-messages="vm.form.adminstufForm.value_2.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Adminstuf value_2 is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="active">Set Activate</label>
+          <input name="active" type="checkbox" ng-model="vm.adminstuf.active" id="active" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">{{vm.adminstuf._id ? 'Update' : 'Create'}}</button>
+        </div>
+        <div ng-show="vm.error" class="text-danger">
+          <strong ng-bind="vm.error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

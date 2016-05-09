@@ -30,6 +30,30 @@
             <p class="help-block error-text" ng-message="required">Stock Name is required.</p>
           </div>
         </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="Last">Last</label>
+          <input name="Last" type="text" ng-model="vm.stock.Last" id="Last" class="form-control" placeholder="Last" required>
+          <div ng-messages="vm.form.stockForm.Last.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Stock Last Rate is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="ChangeFromPreviousClose">ChangeFromPreviousClose</label>
+          <input name="ChangeFromPreviousClose" type="text" ng-model="vm.stock.ChangeFromPreviousClose" id="ChangeFromPreviousClose" class="form-control" placeholder="ChangeFromPreviousClose" required>
+          <div ng-messages="vm.form.stockForm.ChangeFromPreviousClose.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Stock ChangeFromPreviousClose is required.</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="PreviousClose">PreviousClose</label>
+          <input name="PreviousClose" type="text" ng-model="vm.stock.PreviousClose" id="PreviousClose" class="form-control" placeholder="PreviousClose" required>
+          <div ng-messages="vm.form.stockForm.PreviousClose.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Stock PreviousClose is required.</p>
+          </div>
+        </div>
          
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.stock._id ? 'Update' : 'Create'}}</button>

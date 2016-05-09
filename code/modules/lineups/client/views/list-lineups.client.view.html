@@ -1,0 +1,22 @@
+<section>
+  <div class="page-header">
+    <h1>Lineups</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="lineup in vm.lineups"
+       data-ui-sref="lineups.view({ lineupId: lineup._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="lineup.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="lineup.user" data-ng-bind="lineup.user.displayName"></span>
+        <span data-ng-if="!lineup.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="lineup.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.lineups.$resolved && !vm.lineups.length">
+    No Lineups yet, why don't you <a data-ui-sref="lineups.create">create one</a>?
+  </div>
+</section>

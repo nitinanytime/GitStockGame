@@ -56,7 +56,7 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a ui-sref="home" class="navbar-brand">MEAN.JS</a>
+    <a ui-sref="home" class="navbar-brand">Welcome</a>
   </div>
   <nav class="navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
     <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
@@ -82,8 +82,11 @@
     <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
       <li class="dropdown" uib-dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
+          Balance : $<span ng-bind="authentication.user.user_balance"></span>
+        
           <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
           <span ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
+
         </a>
         <ul class="dropdown-menu" role="menu">
           <li ui-sref-active="active" ng-repeat="item in accountMenu.items">
@@ -226,7 +229,7 @@
                     </a></li>
                     <li><a href="#">
                       <div class="task-info">
-                        <span class="task-desc">Issues fixed</span><span class="percentage">80%</span>
+                        <span class="task-desc"></span><span class="percentage">80%</span>
                          <div class="clearfix"></div> 
                       </div>
                       <div class="progress progress-striped active">
@@ -239,7 +242,7 @@
                       </div> 
                     </li>
                   </ul>
-              </li>                         
+              </li>                    
               <div class="clearfix"></div>  
                 </ul>
               </div>

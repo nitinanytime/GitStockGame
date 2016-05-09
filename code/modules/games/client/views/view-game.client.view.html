@@ -1,11 +1,12 @@
 <section>
+
 <!--/ribbon-two-->
                        <h3 class="inner-tittle two">{{vm.player.player_username}}</h3>
                       <div class="ribbon-one graph">
                         <!--/ribbon-inner-->
                           <div class="ribbon-inner one">
                             <div class="ribbon1">
-                              <div class="ribbon-fold"><h4>Balance : {{vm.player.player_money}}</h4></div>
+                              <div class="ribbon-fold"><h4>Balance : {{vm.player.player_money | setDecimal:2}}</h4></div>
                             </div>
                             Game Start Time : {{vm.game.game_startTime}}
                             <br>
@@ -18,11 +19,10 @@
                        <!--//ribbon-two-->
   <div class="page-header">
     <h1 data-ng-bind="vm.game.game_name"></h1>
-    <a class="btn btn-primary" ng-show="!vm.player._id" data-ng-click="vm.joinGame(vm.game)">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-    <a class="btn green fifth" ng-show="vm.player._id" data-ng-click="vm.getPlayerMoves('playerStockModel')">See My Stocks</a>
-    <a class="btn green fifth" ng-show="vm.player._id" data-ng-click="vm.getPlayerMoves('playerMoveModel')">See My Moves</a>
+    <a class="btn green fifth" ng-show="!vm.player._id" data-ng-click="vm.joinGame(vm.game)">Join Game</a>
+    
+    
+    <a class="btn green fifth" ng-show="vm.player._id" data-ng-click="vm.getPlayerLineup()">Import LineUp</a>
 
   </div>
   <div class="pull-right"
@@ -56,6 +56,11 @@
         </div>
         
         <div class="form-group">
+          <label for="checked">Check For set as Dilute</label>
+          <input type="checkbox" class="form-control"  ng-model="vm.playermove.checked"  />
+        </div>
+        
+        <div class="form-group">
           <label for="comment">Comment</label>
           <input type="text" class="form-control"  ng-model="vm.playermove.comment"  />
         </div>
@@ -78,6 +83,11 @@
           <label for="email">Stock Units</label>
           <input type="text" class="form-control"  ng-model="vm.playermove.stock_unit"/>
         </div>
+
+        <div class="form-group">
+          <label for="checked">Check For set as Dilute</label>
+          <input type="checkbox" class="form-control"  ng-model="vm.playermove.checked"  />
+        </div>
         
         <div class="form-group">
           <label for="comment">Comment</label>
@@ -85,12 +95,12 @@
         </div>
        
        <div class="form-group">
-          <h3>Calculated Price - {{(vm.playermove.stock.Last) * (vm.playermove.stock_unit)}}</h3>
+          <h3>Calculated Price -> {{(vm.playermove.stock.Last) * (vm.playermove.stock_unit)}}</h3>
         </div>
         <div class="form-group">
-          <h3>Balance Money - {{(vm.player.player_money) + ((vm.playermove.stock.Last) * (vm.playermove.stock_unit))}}</h3>
+          <h3>Balance Money -> {{(vm.player.player_money) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit))}}</h3>
         </div>
-        <button type="submit" class="btn btn-success">Sell</button>
+        <button type="submit" class="btn btn-success">Save</button>
         
 
       </form>
@@ -102,14 +112,14 @@
     </modal>
 
 
-  <modal title="Congratulation" visible="vm.playerStockModel" >
+  <modal title="Congratulation" visible="vm.playerLineupModel" >
       <div class="graph" style="font-size:1.75em">
      
                               <div class="tables">
                                 <table class="table table-hover">
                                 
-                       <thead> <tr> <th>Stock Symbol</th> <th> Count</th><th>Action</th> </tr> </thead> <tbody> <tr  data-ng-repeat="playerStock in vm.playerStocks" 
-       > <th scope="row">{{playerStock.Symbol}}</th>  <td style="color:red;">{{playerStock.Count}}</td> <td><a class="btn green fifth" data-ng-click="vm.sellThisStock(playerStock.Symbol)">Sell</a></td></tr> </tbody> </table> 
+                       <thead> <tr> <th>Lineup Name</th> <th> Amount</th></tr> </thead> <tbody> <tr  data-ng-repeat="lineup in vm.lineups" 
+        > <th scope="row">{{lineup.name}}</th>  <td style="color:red;">{{lineup.total_money | setDecimal:2}}</td> <td><a class="btn green fifth" data-ng-click="vm.importLineup(lineup)">Import</a></td></tr> </tbody> </table> 
                               </div>
                         
                           </div>
@@ -129,10 +139,28 @@ Date : {{playerMove.created}} "
     </modal>
 
     <div class="clearfix"></div>
-  <div class="list-group">
-  <h4  >Stock List</h3>
+    <div class="col-md-6 tini-time-line" style="float:left;" ng-show="vm.game.game_status==='Closed'">
+    <h4  >Game Completed </h4>
+                             <h3 class="sub-tittle">Winner List</h3>
+                              <ul class="timeline">
+                                <li ng-repeat="winner in vm.game.winningArray">
+                                  <div class="timeline-badge danger"><i>{{$index + 1}}</i></div>
+                                  <div class="timeline-panel">
+                                  <div class="timeline-heading">
+                                    <h4 class="timeline-title">{{winner.playername}}</h4>
+                                  </div>
+                                  <div class="timeline-body">
+                                    <p>{{winner.totalMoney}}</p>
+                                  </div>
+                                  </div>
+                                </li>
+                               
+                              </ul>
+                            </div>
+  <div class="col-md-7 list-group" ng-show="vm.game.game_status==='Open'">
+  <h4  >Stock List</h4>
 
-                              <div class="graph" style="font-size:1.75em">
+                              <div class="graph" style="font-size:1.20em">
                               <div class="tables">
                                 <table class="table table-hover">
                                 <form action="#" method="GET">
@@ -143,14 +171,54 @@ Date : {{playerMove.created}} "
                           </span>
                         </div><!-- Input Group -->
                       </form>
-                       <thead> <tr> <th>Stock Symbol</th> <th> Name</th> <th>Stock Rate</th> <th>Last Rate</th> <th>Change</th> <th>Action</th> </tr> </thead> <tbody> <tr  data-ng-repeat="stock in vm.stocks | filter:searchStock | limitTo:20" 
-       > <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{stock.Symbol}}</th> <td>{{stock.Name}}</td> <td>{{stock.Market}}</td> <td>{{stock.Last}}</td> <td style="color:red;">{{stock.ChangeFromPreviousClose}}</td> <td><a class="btn green fifth" ng-click="vm.buyThisStock(stock)">BuyThis</a></td></tr> </tbody> </table> 
+                       <thead> <tr> <th>Stock Symbol</th> <th> Name</th> <th>Stock Rate</th> <th>Last Rate</th> <th>Change</th> <th>Buy</th> </tr> </thead> <tbody> <tr  data-ng-repeat="stock in vm.stocks | filter:searchStock | limitTo:10" 
+       > <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{stock.Symbol}}</th> 
+       <td>{{stock.Name}}</td> 
+       <td>{{stock.Market}}</td> 
+       <td>{{stock.Last}}</td> 
+       <td  ng-if="stock.ChangeFromPreviousClose < 0" style="color:red;">{{stock.ChangeFromPreviousClose}}</td>
+       <td  ng-if="stock.ChangeFromPreviousClose >= 0" style="color:green;">{{stock.ChangeFromPreviousClose}}</td> 
+       <td><span style="font-size: 1.5em;" class="fam"  data-ng-click="vm.buyThisStock(stock)">+</span></td></tr> </tbody> </table> 
                               </div>
                         
                           </div>
+</div>
+<div class="col-md-7 list-group" ng-show="vm.game.game_status==='Running'">
+  <h4  >Game Running</h4>
+<div class="col-md-3 widget" style="width: 100%;">
+                              <div class="stats-left ">
+                                <h5>Your</h5>
+                                <h4> {{vm.running_value}}</h4>
+                              </div>
+                              <div class="stats-right">
+                                <label>Current Value</label>
+                              </div>
+                              <div class="clearfix"> </div> 
+                            </div>
+</div>
+ <div class="col-md-5 list-group" style="float:right;">
+  <h4  >My LineUp</h4>
 
-
-   <div class="page-header">
+                              <div class="graph" style="font-size:1.20em">
+                                <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" ng-model="searchStockLineUp" name="search" class="form-control2 input-search" placeholder="Search...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                              <div class="tables" style="overflow-y:scroll; height:550px;">
+                                <table class="table table-hover">
+                              
+                       <thead> <tr> <th> </th> <th>Stock Symbol</th> <th>Shares</th> <th>Value</th> <th>Sell</th> </tr> </thead> <tbody> <tr  data-ng-repeat="playerStock in vm.playerStocks | filter:searchStockLineUp | limitTo:20" 
+       > <td><input type="checkbox" ng-model="playerStock.checked"></input></td> <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{playerStock.stock.Symbol}}</th> <td>{{playerStock.stock_unit}}</td> <td>{{(playerStock.stock_unit)*(playerStock.stock.Last)}}</td>  <td><span style="font-size: 1.5em;" data-ng-click="vm.sellThisStock(playerStock.stock)" class="fam">X</span></td></tr> </tbody> </table> 
+                              </div>
+                        
+                          </div>
+</div>
+<div class="clearfix"></div>
+  <!-- <div class="page-header">
     <h1>Stocks</h1>
   </div>
   <div class="list-group" ng-controller= "StocksListController">
@@ -170,7 +238,7 @@ Date : {{playerMove.created}} "
 
   <div class="alert alert-warning text-center" data-ng-if="vm.stocks.$resolved && !vm.stocks.length">
     No Stocks yet, why don't you <a data-ui-sref="stocks.create">create one</a>?
-  </div>
+  </div>-->
 
 <div class="page-header">
     <h1>Players</h1>

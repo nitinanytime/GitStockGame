@@ -9,7 +9,7 @@
 
   function menuConfig(Menus) {
     // Set top bar menu items
-    Menus.addMenuItem('topbar', {
+   /* Menus.addMenuItem('topbar', {
       title: 'Playermoves',
       state: 'playermoves',
       type: 'dropdown',
@@ -19,14 +19,15 @@
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'playermoves', {
       title: 'List Playermoves',
-      state: 'playermoves.list'
+      state: 'playermoves.list',
+      roles: ['admin']
     });
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'playermoves', {
       title: 'Create Playermove',
       state: 'playermoves.create',
-      roles: ['user']
-    });
+      roles: ['admin']
+    });*/
   }
 })();

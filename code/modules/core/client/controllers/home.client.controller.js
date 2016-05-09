@@ -1,10 +1,19 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication',
-  function ($scope,  Authentication) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'GamesService',
+  function ($scope,  Authentication, GamesService) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
     var toggle = true;
+
+    GamesService.query({
+      game_status:'Open'
+    }, function (data) {
+      // body...
+      console.log(data);
+      $scope.games = data;
+      
+    });
     
     $scope.slide = function (){
       if (toggle){

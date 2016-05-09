@@ -20,7 +20,9 @@
       "main": [
         "dist/css/bootstrap.css",
         "dist/css/bootstrap-theme.css",
-        "less/bootstrap.less"
+        "less/bootstrap.less",
+        "./angular.rangeSlider.js",
+        "./angular.rangeSlider.css"
       ]
     },
     "jquery": {

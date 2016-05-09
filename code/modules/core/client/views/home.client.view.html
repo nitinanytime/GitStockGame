@@ -2,6 +2,7 @@
 
 <section ng-controller="HomeController">
  
+
           <!-- //header-ends -->
             <div class="outter-wp">
                 <!--custom-widgets-->
@@ -54,19 +55,26 @@
                         <!--/candile-->
                        <div class="stats-grid">
                                   <div class="stats-head">
-                                      <h4 class="title3">Best Stocks</h4>
+                                      <h4 class="title3">Games<countdown style="float:right;" stopdate="2016-04-05T11:06:37.754Z"></countdown></h4>
                                     </div>
                                   <div class="stats-info graph">
                                     <div class="stats">
-                                      <ul class="list-unstyled">
-                                        <li>Apple<div class="text-success pull-right">12%<i class="fa fa-level-up"></i></div></li>
-                                        <li>Google<div class="text-success pull-right">15%<i class="fa fa-level-up"></i></div></li>
-                                        <li>Yahoo<div class="text-success pull-right">18%<i class="fa fa-level-up"></i></div></li>
-                                        <li>SAMSUNG<div class="text-danger pull-right">17%<i class="fa fa-level-down"></i></div></li>
-                                        <li>ITC<div class="text-danger pull-right">10%<i class="fa fa-level-down"></i></div></li>
-                                        <li>Mobile &amp; tablet<div class="text-success pull-right">14%<i class="fa fa-level-up"></i></div></li>
-                                        <li class="last">Others<div class="text-success pull-right">5%<i class="fa fa-level-up"></i></div></li> 
-                                      </ul>
+                                      <div class="graph" style="font-size:1.75em">
+                              <div class="tables">
+                                <table class="table table-hover">
+                                <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" ng-model="searchGame" name="search" class="form-control2 input-search" placeholder="Search...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                       <thead> <tr> <th>Game</th> <th> Contest</th> <th>Entry Fee</th> <th>Total Prizes</th> <th>Entries</th> <th>Live</th> <th>Join</th></tr> </thead> <tbody> <tr  data-ng-repeat="game in games | filter:searchGame | limitTo:20" 
+       > <th scope="row"><img src="https://lh3.googleusercontent.com/jTvV_FWI-VqQVS5o1ira-VnauuStEtqWmdXbZSSUVvJGo-91P6JLb3mZYUBdbUpHQC3RguoS=s50-h50-e365"/></th> <td>{{game.game_name}}</td> <td>{{game.game_money}}</td>  <td>{{game.game_money}}</td> <td>{{game.game_player}}</td> <td style="color:red;">{{game.game_startTime}}</td> <td><a class="btn green fifth" data-ui-sref="games.view({ gameId: game._id })">Enter</a></td></tr> </tbody> </table> 
+                              </div>
+                        
+                          </div>
                                     </div>
                                   </div>
                                 </div>

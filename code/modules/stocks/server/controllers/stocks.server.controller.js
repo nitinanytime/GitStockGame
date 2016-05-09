@@ -9,6 +9,10 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
+var cron = require('node-schedule');
+
+var http = require('http');
+
 /**
  * Create a Stock
  */
@@ -81,7 +85,7 @@ exports.delete = function(req, res) {
  * List of Stocks
  */
 exports.list = function(req, res) { 
-  Stock.find().sort('-created').populate('user', 'displayName').exec(function(err, stocks) {
+  Stock.find(req.query).sort('-created').populate('user', 'displayName').exec(function(err, stocks) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -115,3 +119,201 @@ exports.stockByID = function(req, res, next, id) {
     next();
   });
 };
+
+
+
+/* run the job at 18:55:30 on Dec. 14 2018*/
+//var rule = new cron.RecurrenceRule();
+//rule.minutes = 20;
+//rule.hours = 2;
+//cron.scheduleJob(rule, function(){
+   // getStockList();
+//});
+
+
+
+//http://finance.yahoo.com/webservice/v1/symbols/RAD/quote?format=json&view=detail
+/*I noted the changes , and scheduling next 2nd phase demo.
+Date- 18-April
+
+Include-
+1. All the changes which we discuss on yesterday demo. flow should be like draft kings.
+2. Xignite All API integration , get all the stocks , listing and update in each 5-10 mints.
+3. Creation of Private game , and invite friends by mail.
+4. mail SMTP setup and start use.
+5. Scheduler for Stock API update, and winner calculation.
+
+mean while i will give a video of status on 13th.
+
+Yet to discuss-
+1. User can create the lineup without signup or not?
+2. what will be our action , if stock price will increase and total money will be min or max to the player fantasy money.
+*/
+
+function getStockList(){
+  Stock.find().sort('-created').exec(function(err, stocks) {
+    if (err) {
+      return null;
+    } else {
+      
+      updateStock(stocks);
+    }
+  });
+}
+
+
+function updateStock(stocks){
+
+//console.log(stocks.length);
+
+//console.log(stocks[237]);
+
+for(var j = 0; j < stocks.length; j++){
+  //console.log('loop First' + j);
+  var stockRequest = "";
+  for(var k = 0; k < 50; k++){
+    //console.log('loop Second' + k);
+    
+      stockRequest = stockRequest + ',' + stocks[j].Symbol;
+    
+    
+    j++;
+    //console.log('loop Second 2nd' + j);
+    if(j>stocks.length-1){break;}
+  }
+  sleep(5000);
+//console.log('loop End' + j);
+
+//console.log(stockRequest);
+
+updateTheseStock(stockRequest);
+}
+console.log("stock updated Successfully");
+};
+
+
+function updateTheseStock(stockRequest){
+
+http.get(" http://finance.yahoo.com/webservice/v1/symbols/"+stockRequest+"/quote?format=json&view=detail",
+  function (res) {
+
+    var data = '';
+    // parsed response body as js object 
+    res.on('data', function (chunk) {
+    //console.log('BODY: ' + chunk);
+    data += chunk;
+
+  });
+    res.on('end', function() {
+
+    //console.log(JSON.parse(data));
+    data = JSON.parse(data);
+    var stockList = data.list.resources;
+
+
+    for(var i = 0; i < stockList.length; i++){
+      var element = stockList[i].resource.fields;
+        var stock = {};
+        stock.Symbol = element.symbol;
+        stock.Name = element.name;
+        //stock.Market = stockList[i].symbol;
+        //stock.MostLiquidExchange = stockList[i].symbol;
+        //stock.CategoryOrIndustry = stockList[i].symbol;
+        //stock.Open = stockList[i].symbol;
+        //stock.Close = stockList[i].symbol;
+        stock.High = element.day_high;
+        stock.Low = element.day_low;
+        stock.Last = element.price;
+        //stock.LastSize = stockList[i].symbol;
+        stock.Volume = element.volume;
+        //stock.PreviousClose = stockList[i].symbol;
+
+        stock.ChangeFromPreviousClose = element.change;
+        stock.PercentChangeFromPreviousClose = element.chg_percent;
+        stock.High52Weeks = element.year_high;
+        stock.Low52Weeks = element.year_low;
+        //stock.Currency = stockList[i].symbol;
+        //stock.TradingHalted = stockList[i].symbol;
+        stock.Time = element.utctime;
+
+        //console.log(stock);
+        var query = {'Symbol':stock.Symbol};
+
+        Stock.update(query, stock, function(err) {
+    if (err) {
+      
+       console.log( "message:" + errorHandler.getErrorMessage(err));
+      
+    } else {
+      
+    }
+  });
+
+      }
+    
+
+  });
+
+    // raw response 
+    
+  });
+}
+
+function createStock() {
+  console.log("creating stock");
+  var list = "";
+ var symlist = list.split(',');
+for(var j = 0; j < symlist.length; j++){
+
+  var stock = new Stock();
+  stock.Symbol = symlist[j];
+  stock.save(function(err) {
+    if (err) {
+      
+        console.log("message:" + errorHandler.getErrorMessage(err));
+      
+    } else {
+      console.log("success");
+    }
+  });
+
+}
+}
+
+
+function deleteStock(stock){
+
+stock.remove(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      console.log('stock removed');
+    }
+  });
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+//entry, commission setup, interest rate setup etc
+
+//Player ranking System/
+//npm ranking 
+
+// User performance and Transaction Listing
+//payment paypal and money (transaction hstory)
+//--Question
+
+
+//User communication system for interacting on game page.
+//do with live fyre
+
+//Winning game
+// --  

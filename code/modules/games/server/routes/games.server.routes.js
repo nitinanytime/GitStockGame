@@ -17,6 +17,8 @@ module.exports = function(app) {
     .get(games.list)
     .post(games.create);
 
+  app.route('/api/games/page/:page').all()
+    .get(games.gamelist)
 
   app.route('/api/games/:gameId').all(gamesPolicy.isAllowed)
     .get(games.read)

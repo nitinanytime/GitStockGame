@@ -81,7 +81,7 @@ exports.delete = function(req, res) {
  * List of Playermoves
  */
 exports.list = function(req, res) { 
-  Playermove.find(req.query).sort('-created').populate('player', 'player_username').populate('stock', 'Symbol').exec(function(err, playermoves) {
+  Playermove.find(req.query).sort('-created').populate('player', 'player_username').populate('stock').exec(function(err, playermoves) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)

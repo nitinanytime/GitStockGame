@@ -26,7 +26,7 @@
     Menus.addSubMenuItem('topbar', 'players', {
       title: 'Create Player',
       state: 'players.create',
-      roles: ['user']
+      roles: ['admin']
     });
   }
 })();

@@ -15,6 +15,7 @@ exports.renderIndex = function (req, res) {
       username: validator.escape(req.user.username),
       created: req.user.created.toString(),
       roles: req.user.roles,
+      user_balance: req.user.user_balance,
       profileImageURL: req.user.profileImageURL,
       email: validator.escape(req.user.email),
       lastName: validator.escape(req.user.lastName),
@@ -34,6 +35,12 @@ exports.renderIndex = function (req, res) {
 exports.renderServerError = function (req, res) {
   res.status(500).render('modules/core/server/views/500', {
     error: 'Oops! Something went wrong...'
+  });
+};
+
+exports.renderSuccess = function (req, res) {
+  res.status(200).render('modules/core/server/views/success', {
+    message: 'Success Payment'
   });
 };
 

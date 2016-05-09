@@ -1,4 +1,4 @@
-<section>
+<section style="    margin-left: 20px;">
   <div class="page-header">
     <h1>{{vm.game._id ? 'Edit Game' : 'New Game'}}</h1>
   </div>
@@ -6,7 +6,7 @@
     <form name="vm.form.gameForm" class="form-horizontal" ng-submit="vm.save(vm.form.gameForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
-          <label class="control-label" for="game_name">game_name</label>
+          <label class="control-label" for="game_name">Game Name</label>
           <input name="game_name" type="text" ng-model="vm.game.game_name" id="game_name" class="form-control" placeholder="game_name" required>
           <div ng-messages="vm.form.gameForm.game_name.$error" role="alert">
             <p class="help-block error-text" ng-message="required">game_name is required.</p>
@@ -14,10 +14,28 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="game_type">game_type</label>
-          <input name="game_type" type="text" ng-model="vm.game.game_type" id="game_type" class="form-control" placeholder="game_type" required>
+          <label class="control-label" for="game_type">Game Type</label>
+          
+          <select name="game_type" ng-model="vm.game.game_type" id="game_type" ng-change="privateGame()" required>
+      <option value="public">public</option>
+      <option value="private">private</option>
+    </select>
+
           <div ng-messages="vm.form.gameForm.game_type.$error" role="alert">
             <p class="help-block error-text" ng-message="required">game_type is required.</p>
+          </div>
+          <br>
+    <textarea style=" width: 300px;height: 150px;" ng-show="vm.private" ng-model="vm.game.game_inviteList" placeholder="Enter your Frinds Email id to invite them, seperated by comma (For Private Game Only)"></textarea>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label class="control-label" for="game_winningRule">game_winningRule</label>
+
+          <select name="game_type" ng-model="vm.game.game_winningRule" id="game_winningRule"  ng-options="winningRule as winningRule.key for winningRule in vm.winningRules" required>
+          </select>
+          
+          <div ng-messages="vm.form.gameForm.game_winningRule.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_winningRule is required.</p>
           </div>
         </div>
 
@@ -37,7 +55,7 @@
           </div>
         </div>
 
-        <div class="form-group" show-errors>
+        <!--<div class="form-group" show-errors>
           <label class="control-label" for="game_maxPlayer">game_maxPlayer</label>
           <input name="game_maxPlayer" type="number" ng-model="vm.game.game_maxPlayer" id="game_maxPlayer" class="form-control" placeholder="game_maxPlayer" required>
           <div ng-messages="vm.form.gameForm.game_maxPlayer.$error" role="alert">
@@ -51,29 +69,29 @@
           <div ng-messages="vm.form.gameForm.game_player.$error" role="alert">
             <p class="help-block error-text" ng-message="required">game_player is required.</p>
           </div>
-        </div>
+        </div>-->
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="game_money">game_money</label>
+          <label class="control-label" for="game_money">Game Fantacy Money</label>
           <input name="game_money" type="number" ng-model="vm.game.game_money" id="game_money" class="form-control" placeholder="game_money" required>
           <div ng-messages="vm.form.gameForm.game_money.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">game_money is required.</p>
+            <p class="help-block error-text" ng-message="required">Game Fantacy Money is required.</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="game_maxMoney">game_maxMoney</label>
-          <input name="game_maxMoney" type="number" ng-model="vm.game.game_maxMoney" id="game_maxMoney" class="form-control" placeholder="game_maxMoney" required>
-          <div ng-messages="vm.form.gameForm.game_maxMoney.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">game_maxMoney is required.</p>
+          <label class="control-label" for="game_EntryFee">Entry Fee</label>
+          <input name="game_EntryFee" type="number" ng-model="vm.game.game_EntryFee" id="game_EntryFee" class="form-control" placeholder="game_EntryFee" required>
+          <div ng-messages="vm.form.gameForm.game_EntryFee.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_EntryFee is required.</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <label class="control-label" for="game_minMoney">game_minMoney</label>
-          <input name="game_minMoney" type="number" ng-model="vm.game.game_minMoney" id="game_minMoney" class="form-control" placeholder="game_minMoney" required>
-          <div ng-messages="vm.form.gameForm.game_minMoney.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">game_minMoney is required.</p>
+          <label class="control-label" for="game_prize">Prize Money</label>
+          <input name="game_prize" type="number" ng-model="vm.game.game_prize" id="game_prize" class="form-control" placeholder="game_prize" required>
+          <div ng-messages="vm.form.gameForm.game_prize.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">game_prize is required.</p>
           </div>
         </div>
 

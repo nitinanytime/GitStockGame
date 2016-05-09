@@ -18,7 +18,7 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'games', {
-      title: 'List Games',
+      title: 'My Games',
       state: 'games.list'
     });
 

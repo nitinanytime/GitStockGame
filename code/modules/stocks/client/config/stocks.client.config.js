@@ -26,7 +26,7 @@
     Menus.addSubMenuItem('topbar', 'stocks', {
       title: 'Create Stock',
       state: 'stocks.create',
-      roles: ['user']
+      roles: ['admin']
     });
   }
 })();
