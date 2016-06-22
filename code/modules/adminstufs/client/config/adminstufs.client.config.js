@@ -13,20 +13,21 @@
       title: 'Adminstufs',
       state: 'adminstufs',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['admin']
     });
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'adminstufs', {
       title: 'List Adminstufs',
-      state: 'adminstufs.list'
+      state: 'adminstufs.list',
+      roles: ['admin']
     });
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'adminstufs', {
       title: 'Create Adminstuf',
       state: 'adminstufs.create',
-      roles: ['user']
+      roles: ['admin']
     });
 
     //List Games

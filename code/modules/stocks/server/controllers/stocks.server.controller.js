@@ -125,12 +125,19 @@ exports.stockByID = function(req, res, next, id) {
 /* run the job at 18:55:30 on Dec. 14 2018*/
 //var rule = new cron.RecurrenceRule();
 //rule.minutes = 20;
-//rule.hours = 2;
+//rule.minute = 55;
 //cron.scheduleJob(rule, function(){
-   // getStockList();
+//    createStock();
+//    getStockList();
 //});
 
-
+var minutes = 50, the_interval = minutes * 60 * 1000;
+setInterval(function() {
+  console.log("I am doing my 5 minutes check");
+  // do your stuff here
+    createStock();
+    getStockList();
+}, the_interval);
 
 //http://finance.yahoo.com/webservice/v1/symbols/RAD/quote?format=json&view=detail
 /*I noted the changes , and scheduling next 2nd phase demo.
@@ -193,8 +200,13 @@ console.log("stock updated Successfully");
 
 
 function updateTheseStock(stockRequest){
+  var optionsget = {
+    host : 'finance.yahoo.com',
+    path : '/webservice/v1/symbols/'+stockRequest+'/quote?format=json&view=detail', // the rest of the url with parameters if needed
+    method : 'GET' // do GET
+};
 
-http.get(" http://finance.yahoo.com/webservice/v1/symbols/"+stockRequest+"/quote?format=json&view=detail",
+http.get(optionsget,
   function (res) {
 
     var data = '';
@@ -207,8 +219,17 @@ http.get(" http://finance.yahoo.com/webservice/v1/symbols/"+stockRequest+"/quote
     res.on('end', function() {
 
     //console.log(JSON.parse(data));
-    data = JSON.parse(data);
-    var stockList = data.list.resources;
+
+    var stockList = [];
+
+    try{
+        data = JSON.parse(data);
+        stockList = data.list.resources;
+    }catch(e){
+        console.log(e.message); //error in the above string(in this case,yes)!
+    }
+    
+    console.log("total stock updated"+ stockList.length);
 
 
     for(var i = 0; i < stockList.length; i++){

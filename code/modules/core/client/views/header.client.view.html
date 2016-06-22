@@ -48,7 +48,13 @@
     </ul>
   </nav>
 </div>-->
-<div class="container" ng-controller="HeaderController">
+<a ui-sref="home" class="navbar-brand" ><img style="margin-left: 9%;
+    width: 7%;
+    position: fixed;
+    z-index: 1000000;" src="/images/newLogo.png"></a>
+<div ng-controller="HeaderController" style="    background: #383739;">
+<div class="container" >
+
   <div class="navbar-header">
     <button class="navbar-toggle" type="button" ng-click="toggleCollapsibleMenu()">
       <span class="sr-only">Toggle navigation</span>
@@ -56,10 +62,14 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a ui-sref="home" class="navbar-brand">Welcome</a>
+    
   </div>
   <nav class="navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
+
     <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
+    <li>
+        <a href="/">Lobby</a>
+      </li>
       <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" uib-dropdown="item.type === 'dropdown'">
         <a ng-switch-when="dropdown" class="dropdown-toggle" uib-dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
         <ul ng-switch-when="dropdown" class="dropdown-menu">
@@ -71,15 +81,45 @@
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
+      
       <li ui-sref-active="active">
-        <a ui-sref="authentication.signup">Sign Up</a>
+        <a style="width: 124px;
+    margin-top: -9px;" ui-sref="authentication.signin">Sign In To Your Account &#8617;</a>
       </li>
       <li class="divider-vertical"></li>
       <li ui-sref-active="active">
-        <a ui-sref="authentication.signin">Sign In</a>
+        <a style=" margin-top: 24px;
+    background-color: #158102;
+    height: 34px;
+    padding-top: 8px;" ui-sref="authentication.signup">Sign Up</a> 
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+
+    <li class="dropdown note">
+                <a ng-click="readNotification()" class="dropdown-toggle" data-toggle="dropdown" style="background-color: rgb(56, 55, 57);" aria-expanded="false"><i class="fa fa-bell-o"></i> <span class="badge blue1">{{(notifications | filter:false).length}}</span></a>
+                    <ul class="dropdown-menu two">
+                    <li>
+                      <div class="notification_header">
+                        <h3>You have these Notification</h3>
+                      </div>
+                    </li>
+                    <li ng-repeat="notification in notifications  | limitTo:5"><a href="{{notification.href}}">
+                               <div class="user_img"><img src="{{notification.image}}" alt=""></div>
+                               <div class="notification_desc">
+                              <p>{{notification.message}}</p>
+                              <p><span>{{notification.created}}</span></p>
+                              </div>
+                               <div class="clearfix"></div> 
+                             </a></li>
+                    
+                    <li>
+                      <div class="notification_bottom">
+                        <a href="/notifications">See all Notification</a>
+                      </div> 
+                    </li>
+                  </ul>
+              </li> 
       <li class="dropdown" uib-dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
           Balance : $<span ng-bind="authentication.user.user_balance"></span>
@@ -103,56 +143,19 @@
 </div>
   <div class="header-section">
             <!--menu-right-->
-            <div class="top_menu">
+            <div class="top_menu" style="background-color: #1d1c1e;">
                     
               <!--/profile_details-->
-                <div class="profile_details_left">
+                <div>
                   <ul class="nofitications-dropdown">
                       
-                         <li class="dropdown note">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope-o"></i> <span class="badge">3</span></a>
+                    <li class="dropdown note">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="background-color: #1d1c1e; padding: 1.4em 0em;    color: #1d1c1e;"; aria-expanded="false">W</a>
 
-                        
-                          <ul class="dropdown-menu two first">
-                            <li>
-                              <div class="notification_header">
-                                <h3>You have 3 new messages  </h3> 
-                              </div>
-                            </li>
-                            <li><a href="#">
-                               <div class="user_img"><img src="images/1.jpg" alt=""></div>
-                               <div class="notification_desc">
-                              <p>Lorem ipsum dolor sit amet</p>
-                              <p><span>1 hour ago</span></p>
-                              </div>
-                               <div class="clearfix"></div> 
-                             </a></li>
-                             <li class="odd"><a href="#">
-                              <div class="user_img"><img src="images/in.jpg" alt=""></div>
-                               <div class="notification_desc">
-                              <p>Lorem ipsum dolor sit amet </p>
-                              <p><span>1 hour ago</span></p>
-                              </div>
-                              <div class="clearfix"></div>  
-                             </a></li>
-                            <li><a href="#">
-                               <div class="user_img"><img src="images/in1.jpg" alt=""></div>
-                               <div class="notification_desc">
-                              <p>Lorem ipsum dolor sit amet </p>
-                              <p><span>1 hour ago</span></p>
-                              </div>
-                               <div class="clearfix"></div> 
-                            </a></li>
-                            <li>
-                              <div class="notification_bottom">
-                                <a href="#">See all messages</a>
-                              </div> 
-                            </li>
-                          </ul>
                     </li>
                     
-              <li class="dropdown note">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell-o"></i> <span class="badge">5</span></a>
+              <!--<li class="dropdown note">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="background-color: Black;"; aria-expanded="false"><i class="fa fa-bell-o"></i> <span class="badge">5</span></a>
 
                   <ul class="dropdown-menu two">
                     <li>
@@ -192,57 +195,29 @@
                   </ul>
               </li> 
             <li class="dropdown note">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-tasks"></i> <span class="badge blue1">9</span></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="background-color: Black;"; aria-expanded="false"><i class="fa fa-tasks"></i> <span class="badge blue1">{{notifications.length}}</span></a>
                     <ul class="dropdown-menu two">
                     <li>
                       <div class="notification_header">
-                        <h3>You have 9 pending task</h3>
+                        <h3>You have these Notification</h3>
                       </div>
                     </li>
-                    <li><a href="#">
-                        <div class="task-info">
-                        <span class="task-desc">Database update</span><span class="percentage">40%</span>
-                        <div class="clearfix"></div>  
-                         </div>
-                        <div class="progress progress-striped active">
-                         <div class="bar yellow" style="width:40%;"></div>
-                      </div>
-                    </a></li>
-                    <li><a href="#">
-                      <div class="task-info">
-                        <span class="task-desc">Dashboard done</span><span class="percentage">90%</span>
-                         <div class="clearfix"></div> 
-                      </div>
-                       
-                      <div class="progress progress-striped active">
-                         <div class="bar green" style="width:90%;"></div>
-                      </div>
-                    </a></li>
-                    <li><a href="#">
-                      <div class="task-info">
-                        <span class="task-desc">Mobile App</span><span class="percentage">33%</span>
-                        <div class="clearfix"></div>  
-                      </div>
-                       <div class="progress progress-striped active">
-                         <div class="bar red" style="width: 33%;"></div>
-                      </div>
-                    </a></li>
-                    <li><a href="#">
-                      <div class="task-info">
-                        <span class="task-desc"></span><span class="percentage">80%</span>
-                         <div class="clearfix"></div> 
-                      </div>
-                      <div class="progress progress-striped active">
-                         <div class="bar  blue" style="width: 80%;"></div>
-                      </div>
-                    </a></li>
+                    <li ng-repeat="notification in notifications"><a href="#">
+                               <div class="user_img"><img src="notification.image" alt=""></div>
+                               <div class="notification_desc">
+                              <p>{{notification.message}}</p>
+                              <p><span>{{notification.created}}</span></p>
+                              </div>
+                               <div class="clearfix"></div> 
+                             </a></li>
+                    
                     <li>
                       <div class="notification_bottom">
-                        <a href="#">See all pending task</a>
+                        <a href="/notifications">See all Notification</a>
                       </div> 
                     </li>
                   </ul>
-              </li>                    
+              </li>     -->               
               <div class="clearfix"></div>  
                 </ul>
               </div>
@@ -251,4 +226,4 @@
             </div>
             <!--//menu-right-->
           <div class="clearfix"></div>
-        </div>
+        </div></div>

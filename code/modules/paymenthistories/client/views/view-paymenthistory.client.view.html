@@ -4,10 +4,7 @@
   </div>
   <div class="pull-right"
        data-ng-show="vm.paymenthistory.isCurrentUserOwner">
-    <a class="btn btn-primary"
-       data-ui-sref="paymenthistories.edit({ paymenthistoryId: vm.paymenthistory._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
+   
     <a class="btn btn-primary" data-ng-click="vm.remove()">
       <i class="glyphicon glyphicon-trash"></i>
     </a>
@@ -22,5 +19,5 @@
       <span data-ng-if="!vm.paymenthistory.user">Deleted User</span>
     </em>
   </small>
-  <p class="lead" data-ng-bind="vm.paymenthistory.content"></p>
+  <p class="lead" data-ng-bind="vm.paymenthistory.description"></p>
 </section>

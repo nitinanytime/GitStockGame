@@ -12,6 +12,7 @@
           <select name="type" ng-model="vm.adminstuf.type" id="type" required>
           <option value="winning_rule">winning_rule</option>
           <option value="balance">balance</option>
+          <option value="disable_date">disable_date</option>
           </select>
           <div ng-messages="vm.form.adminstufForm.type.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Adminstuf Type name is required.</p>
@@ -37,7 +38,7 @@
 
         <div class="form-group" show-errors>
           <label class="control-label" for="value_2">Value 2 Number(optional)</label>
-          <input name="value_2" type="number" ng-model="vm.adminstuf.value_2" id="value_2" class="form-control" placeholder="Value" required>
+          <input name="value_2" type="number" ng-model="vm.adminstuf.value_2" min="0" id="value_2" class="form-control" placeholder="Value" required>
           <div ng-messages="vm.form.adminstufForm.value_2.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Adminstuf value_2 is required.</p>
           </div>

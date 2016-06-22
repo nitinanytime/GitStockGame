@@ -1,0 +1,72 @@
+<!--<section>
+  <div class="page-header">
+    <h1>Stockhistories</h1>
+  </div>
+  <div class="list-group">
+    <a data-ng-repeat="stockhistory in vm.stockhistories"
+       data-ui-sref="stockhistories.view({ stockhistoryId: stockhistory._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="stockhistory.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="stockhistory.user" data-ng-bind="stockhistory.user.displayName"></span>
+        <span data-ng-if="!stockhistory.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="stockhistory.name"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.stockhistories.$resolved && !vm.stockhistories.length">
+    No Stockhistories yet, why don't you <a data-ui-sref="stockhistories.create">create one</a>?
+  </div>
+</section>-->
+
+<section style="font-size:1.75em;">
+  <div class="page-header">
+    <h1>Stocks History</h1>
+  </div>
+  <div class="col-md-12 list-group">
+  <h4 class="title3">Stock List</h4>
+
+                              <div class="graph">
+                              <div class="tables">
+                                <table class="table table-hover">
+                                <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" ng-model="searchStock" name="search" class="form-control2 input-search" style="width: 50%;" placeholder="Search...">
+                          <span class="input-group-btn" style="width: 20%;">
+                            <datepicker  date-format="MM/dd/yyyy"  selector="form-control">
+          <input name="filterDate" type="text" ng-model="vm.filterDate" id="filterDate" class="form-control" ng-change="vm.filterHistory()" placeholder="filterDate">
+          </datepicker>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                       <thead> <tr> <th>Stock Symbol</th> <th> Name</th> <th>Stock Rate</th> <th>Last Rate</th> <th ng-click="vm.sortType = 'Symbol';">Change</th> <th ng-click="vm.sortType = 'created';">Date</th> </tr> </thead> <tbody> <tr  data-ng-repeat="stock in vm.stockhistories | orderBy:vm.sortType | filter:searchStock | limitTo:20" data-ui-sref="stocks.view({ stockId: stock._id })"
+       > <th scope="row" style="cursor: pointer;">{{stock.Symbol}}</th> <td>{{stock.Name}}</td> <td>{{stock.Market}}</td> <td>{{stock.Last}}</td> <td style="color:red;">{{stock.ChangeFromPreviousClose}}</td><td>{{stock.created | date:"medium"}}</td> </tr> </tbody> </table> 
+                              </div>
+                        
+                          </div>
+                          </div>
+  <!--<div class="col-md-4 list-group">
+    <a data-ng-repeat="stock in vm.stocks"
+       data-ui-sref="stocks.view({ stockId: stock._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Posted on
+        <span data-ng-bind="stock.created | date:'mediumDate'"></span>
+        by
+        <span data-ng-if="stock.user" data-ng-bind="stock.user.displayName"></span>
+        <span data-ng-if="!stock.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="stock.Name"></h4>
+      <h4 class="list-group-item-heading" data-ng-bind="stock.Market"></h4>
+      <h4 class="list-group-item-heading" data-ng-bind="stock.Symbol"></h4>
+    </a>
+  </div>
+  <div class="alert alert-warning text-center" data-ng-if="vm.stocks.$resolved && !vm.stocks.length">
+    No Stocks yet, why don't you <a data-ui-sref="stocks.create">create one</a>?
+  </div>-->
+
+
+ 
+</section>

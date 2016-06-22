@@ -33,7 +33,7 @@ vm.filterMyCreation = function(games) {
     return result;
 }
 	console.log(vm.authentication.user.username);
-    PlayersService.query({
+   PlayersService.query({
       player_username: vm.authentication.user.username
     }, function (data) {
       // body...

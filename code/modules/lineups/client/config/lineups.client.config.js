@@ -10,7 +10,7 @@
   function menuConfig(Menus) {
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
-      title: 'Lineups',
+      title: 'My Lineups',
       state: 'lineups',
       type: 'dropdown',
       roles: ['*']

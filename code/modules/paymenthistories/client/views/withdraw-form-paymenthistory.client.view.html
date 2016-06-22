@@ -8,14 +8,15 @@
       <a class="btn green fifth" href="/">Confirm</a>
     </modal>
 
-  <div class="col-md-12">
+  <div class="col-md-5" style="float: none;
+    margin: 0 auto;">
     <form name="vm.form.paymenthistoryForm" class="form-horizontal" ng-submit="vm.save(vm.form.paymenthistoryForm.$valid)" novalidate>
       <fieldset>
 
 
       <div class="form-group" show-errors>
           <label class="control-label" for="amount">Amount</label>
-          <input name="amount" type="number" ng-model="vm.paymenthistory.amount" id="amount" class="form-control" placeholder="amount" required>
+          <input name="amount" type="number" ng-model="vm.paymenthistory.amount" min="1" id="amount" class="form-control" placeholder="amount" required>
           <div ng-messages="vm.form.paymenthistoryForm.amount.$error" role="alert">
             <p class="help-block error-text" ng-message="required"> Money is required.</p>
           </div>

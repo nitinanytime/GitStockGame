@@ -1,0 +1,20 @@
+<section>
+  <div class="page-header">
+    <h1>Notifications</h1>
+  </div>
+  <div class="list-group" style="width: 93%;">
+    <a data-ng-repeat="notification in vm.notifications"
+       data-ui-sref="notifications.view({ notificationId: notification._id })"
+       class="list-group-item">
+      <small class="list-group-item-text">
+        Notification on
+        <span data-ng-bind="notification.created | date:'mediumDate'"></span>
+        for
+        <span data-ng-if="notification.user" data-ng-bind="notification.user.displayName"></span>
+        <span data-ng-if="!notification.user">Deleted User</span>
+      </small>
+      <h4 class="list-group-item-heading" data-ng-bind="notification.message"></h4>
+    </a>
+  </div>
+  
+</section>

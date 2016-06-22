@@ -66,12 +66,12 @@ module.exports = {
     sandbox: true
   },
   mailer: {
-    from: process.env.MAILER_FROM || 'Nitin Dwivedi',
+    from: process.env.MAILER_FROM || 'Street Fight Game',
     options: {
       service: process.env.MAILER_SERVICE_PROVIDER || 'Gmail',
       auth: {
-        user: process.env.MAILER_EMAIL_ID || 'nitinanytime@gmail.com',
-        pass: process.env.MAILER_PASSWORD || '9589901807'
+        user: process.env.MAILER_EMAIL_ID || 'showcrazesite@gmail.com',
+        pass: process.env.MAILER_PASSWORD || 'SMtf@1649'
       }
     }
   },

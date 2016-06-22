@@ -261,8 +261,8 @@ var payment = {
     "payment_method": "paypal"
   },
   "redirect_urls": {
-    "return_url": "http://0.0.0.0:3000/api/paymenthistories/success?id="+paymenthistory._id,
-    "cancel_url": "http://0.0.0.0:3000/payments/cancel?id="+paymenthistory._id
+    "return_url": "http://45.33.55.110:3000/api/paymenthistories/success?id="+paymenthistory._id,
+    "cancel_url": "http://45.33.55.110:3000/payments/cancel?id="+paymenthistory._id
   },
   "transactions": [{
     "amount": {

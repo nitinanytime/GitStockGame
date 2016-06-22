@@ -7,6 +7,7 @@ module.exports = {
         // bower:css
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+        'public/lib/angularjs-datepicker/dist/angular-datepicker.min.css',
         'public/lib/css/*.css'
 
         // endbower
@@ -21,6 +22,7 @@ module.exports = {
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.js',
         'public/lib/angularcountdown/dist/angularcountdown.js',
+        'public/lib/angularjs-datepicker/dist/angular-datepicker.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/js/jquery-1.10.2.min.js',
         'public/lib/js/moment-2.2.1.js',

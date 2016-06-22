@@ -81,6 +81,7 @@ exports.delete = function(req, res) {
  * List of Lineups
  */
 exports.list = function(req, res) { 
+  req.query.user = req.user;
   Lineup.find(req.query).sort('-created').populate('user', 'displayName').populate('line.stock').exec(function(err, lineups) {
     if (err) {
       return res.status(400).send({

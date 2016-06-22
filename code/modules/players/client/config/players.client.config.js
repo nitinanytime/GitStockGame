@@ -10,7 +10,7 @@
   function menuConfig(Menus) {
     // Set top bar menu items
     Menus.addMenuItem('topbar', {
-      title: 'Players',
+      title: 'Top Rankers',
       state: 'players',
       type: 'dropdown',
       roles: ['*']
@@ -18,7 +18,7 @@
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'players', {
-      title: 'List Players',
+      title: 'List Top20',
       state: 'players.list'
     });
 

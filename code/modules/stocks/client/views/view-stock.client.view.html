@@ -3,7 +3,7 @@
     <h1 data-ng-bind="vm.stock.stock_name"></h1>
   </div>
   <div class="pull-right"
-       data-ng-show="vm.stock.isCurrentUserOwner">
+       data-ng-show="vm.addPayout">
     <a class="btn btn-primary"
        data-ui-sref="stocks.edit({ stockId: vm.stock._id })">
       <i class="glyphicon glyphicon-edit"></i>
@@ -22,5 +22,9 @@
       <span data-ng-if="!vm.stock.user">Deleted User</span>
     </em>
   </small>
-  <p class="lead" data-ng-bind="vm.stock.content"></p>
+  <p class="lead" > Symbol -: {{vm.stock.Symbol}} </p>
+  <p class="lead" >Name -: {{vm.stock.Name}} </p>
+  <p class="lead" >Market -: {{vm.stock.Market}}</p>
+  <p class="lead" >Last Rate -: {{vm.stock.Last}}</p>
+  <p class="lead" >ChangeFromPreviousClose -: {{vm.stock.ChangeFromPreviousClose}}</p>
 </section>

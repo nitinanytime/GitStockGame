@@ -4,7 +4,31 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
   function ($scope,  Authentication, GamesService) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
-    var toggle = true;
+
+    var toggle = false;
+
+    angular.element(document.querySelector('.page-container')).addClass('sidebar-collapsed').removeClass('sidebar-collapsed-back');
+        angular.element(document.querySelector('#menu span')).css({ 'position':'absolute' });
+
+    $scope.myInterval = 5000;
+    $scope.noWrapSlides = false;
+    $scope.active = 0;
+    var currIndex = 0;
+    var slides = $scope.slides = [];
+    slides.push({
+      image: 'http://www.stockmarketgame.org/img/layerslider/Students-Hero1.jpg',
+      text: ['Nice image','Awesome photograph','That is so cool','I love that'][slides.length % 4],
+      id: currIndex++
+
+    });
+    slides.push({
+      image: 'http://education.howthemarketworks.com/wp-content/uploads/2015/08/translogosmallnewcolor.png',
+      text: ['Nice image','Awesome photograph','That is so cool','I love that'][slides.length % 4],
+      id: currIndex++
+    });
+    
+
+  $scope.init = function(){
 
     GamesService.query({
       game_status:'Open'
@@ -12,8 +36,36 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       // body...
       console.log(data);
       $scope.games = data;
-      
+      $scope.games.sort(comp);
+      $scope.nextlive = $scope.games[0].game_startTime;
     });
+  }
+
+var timeinterval = setInterval(function(){ 
+  var t = Date.parse($scope.nextlive) - Date.parse(new Date());
+  var seconds = Math.floor( (t/1000) % 60 );
+  var minutes = Math.floor( (t/1000/60) % 60 );
+  var hours = Math.floor( (t/(1000*60*60)) % 24 );
+  var days = Math.floor( t/(1000*60*60*24) );
+  var result = days + ':' +hours +':'+ minutes +':'+ seconds;
+  $scope.nextliveValue = result;
+  $scope.$apply();
+ },1000);
+
+$scope.timer  = function (endtime){
+  var t = Date.parse(endtime) - Date.parse(new Date());
+  var seconds = Math.floor( (t/1000) % 60 );
+  var minutes = Math.floor( (t/1000/60) % 60 );
+  var hours = Math.floor( (t/(1000*60*60)) % 24 );
+  var days = Math.floor( t/(1000*60*60*24) );
+  var result = days + ':' +hours +':'+ minutes +':'+ seconds;
+  return result;
+}
+
+
+    function comp(a, b) {
+    return  new Date(b.game_startTime).getTime() - new Date(a.game_startTime).getTime() ;
+  }
     
     $scope.slide = function (){
       if (toggle){
@@ -30,6 +82,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       toggle = !toggle;
    
     };
+
+
+
   }
 ]);
 

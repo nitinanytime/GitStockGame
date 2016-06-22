@@ -50,6 +50,8 @@
                                 <p>{{paymenthistory.payment_method}}</p>
                             </td>
                             <td>
+                            {{paymenthistory.description}}
+                            <br><br>
                               <span ng-class="{'fam': paymenthistory.status == 'Requested' , 
                               'work': paymenthistory.status == 'success',
                               'ur': paymenthistory.status == 'cancel'}" >

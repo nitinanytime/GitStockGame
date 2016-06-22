@@ -31,24 +31,30 @@ var GameSchema = new Schema({
   },
   winningArray: [{
     playername: String,
-    totalMoney: Number
+    totalStock: Number,
+    totalMoney: Number,
+    winingAmount: Number
     // any other paths for features
   }],
   game_startTime: {
     type: Date,
-    default: Date.now,
     required: 'Please fill  game_startTime',
     trim: true
   },
   game_endTime: {
     type: Date,
-    default: '',
     required: 'Please fill game_endTime',
     trim: true
   },
   game_maxPlayer: {
     type: Number,
-    default: 10,
+    default: 1000,
+    required: 'Please fill game_maxPlayer',
+    trim: true
+  },
+  game_minPlayer: {
+    type: Number,
+    default: 2,
     required: 'Please fill game_maxPlayer',
     trim: true
   },
@@ -60,7 +66,7 @@ var GameSchema = new Schema({
   },
   game_money: {
     type: Number,
-    default: '',
+    default: 1000000,
     required: 'Please fill game_money',
     trim: true
   },
@@ -78,14 +84,19 @@ var GameSchema = new Schema({
   },
   game_prize: {
     type: Number,
-    default: '',
+    default: 0,
     required: 'Please fill game_prize',
     trim: true
   },
   game_winningRule: {
     key: String,
-    value_1: String,
-    value_2: Number
+    value_1: Number, //size
+    value_2: Number  //commission
+  },
+  game_payOut: {
+    min: Number,
+    max: Number,
+    money: Number
   },
   created: {
     type: Date,

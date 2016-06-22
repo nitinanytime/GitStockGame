@@ -17,6 +17,13 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.addPayout = false;
+
+    if(vm.authentication.user.roles.indexOf('admin') > -1){
+        vm.addPayout = true;
+        
+      }
+
 
     // Remove existing Stock
     function remove() {

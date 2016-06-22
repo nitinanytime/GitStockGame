@@ -7,7 +7,7 @@ var path = require('path'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
-
+var cron = require('node-schedule');
 /**
  * Show the current user
  */
@@ -70,6 +70,8 @@ exports.list = function (req, res) {
   });
 };
 
+
+
 /**
  * User middleware
  */
@@ -91,3 +93,39 @@ exports.userByID = function (req, res, next, id) {
     next();
   });
 };
+
+
+ /* run the job for getting the player rank daily*/
+  var rule = new cron.RecurrenceRule();
+  //rule.seconds = 40;
+  rule.hour = 9;
+  cron.scheduleJob(rule, function(){
+    userRankRefresh();
+  });
+
+  function userRankRefresh(){
+    User.find({}, '-salt -password').sort({user_points: -1}).exec(function(err, users) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(users.length);
+          for(var j = 0; j < users.length; j++){
+            var user = users[j];
+            user.user_rank = j+1;
+            user.save(function(err) {
+              if (err) {
+                  console.log('Error in  Rank updated');
+              } else {
+
+                  console.log('successfully Ranked updated');
+              }
+            });
+
+
+          }
+          
+
+          
+        }
+      });
+  }

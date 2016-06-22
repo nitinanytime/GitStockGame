@@ -19,16 +19,31 @@ exports.create = function(req, res) {
   var player = new Player(req.body);
   player.user = req.user;
 
-  player.save(function(err) {
+   updateGame(player,callback);
+
+
+  function callback(result){
+
+    if(result === true){
+        player.save(function(err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      updateGame(player);
+     
       res.jsonp(player);
     }
   });
+      
+    }
+      else {
+        return res.status(400).send({
+        message: ""
+      });
+      }
+
+  }
 };
 
 /**
@@ -123,12 +138,16 @@ exports.playerByID = function(req, res, next, id) {
 };
 
 
-function updateGame(player){
+function updateGame(player,fn){
   //console.log(player);
   var gameid = player.game;
   Game.findById(gameid).exec(function (err, game) {
       if (err) {
       } else {
+
+        if(game.game_player> game.game_minPlayer){
+          fn(false);
+        }else{
         game.game_player = game.game_player + 1;
         game.game_EntryMoney = game.game_EntryMoney + game.game_EntryFee; 
 
@@ -140,10 +159,12 @@ function updateGame(player){
         } else {
         updateUserBalance('SUBSTRACT', player.player_username, game, game.game_EntryFee);
         console.log('Game Saved New Player added');
-        
+          
+        fn(true);
       }
     });
       }
+    }
     });
 
 }

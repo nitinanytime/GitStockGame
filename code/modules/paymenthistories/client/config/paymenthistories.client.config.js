@@ -13,13 +13,14 @@
       title: 'Paymenthistories',
       state: 'paymenthistories',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['user']
     });
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'paymenthistories', {
       title: 'List Paymenthistories',
-      state: 'paymenthistories.list'
+      state: 'paymenthistories.list',
+      roles: ['user']
     });
 
     // Add the dropdown create item

@@ -1,8 +1,45 @@
 <section>
   <div class="page-header">
-    <h1>Players</h1>
+    <h1>Top Players</h1>
   </div>
-  <div class="list-group">
+<div class="tab-content tab-content-in">
+                            <div class="tab-pane active text-style" id="tab1">
+                              <div class="inbox-right">
+                                  
+                        <div class="mailbox-content">
+                          
+                <table class="table" style="font-size: 1.85em;
+">
+                    <tbody>
+                        <tr class="table-row" ng-repeat="user in vm.rankUsers">
+                            <td class="table-img">
+                               <img src="{{user.profileImageURL}}" alt="" />
+                            </td>
+                            <td class="table-text">
+                              <h6>{{user.displayName}}</h6>
+                                <p>username - {{user.username}}</p>
+                            </td>
+                            <td>
+                              <span ng-class="work" >
+                              {{user.user_points}}</span>
+                            </td>
+                            <td class="march">
+                                {{user.user_rank}}
+                            </td>
+                          
+                             <td >
+               <a class="btn green fifth" href="mailto:{{user.email}}?subject=Stock Game Message">Send message</a>
+                            </td>
+                        </tr>
+                      
+                    </tbody>
+                </table>
+               </div>
+            </div>
+</div>
+</div>
+
+  <!-- <div class="list-group">
     <a data-ng-repeat="player in vm.players"
        data-ui-sref="players.view({ playerId: player._id })"
        class="list-group-item">
@@ -18,5 +55,5 @@
   </div>
   <div class="alert alert-warning text-center" data-ng-if="vm.players.$resolved && !vm.players.length">
     No Players yet, why don't you <a data-ui-sref="players.create">create one</a>?
-  </div>
+  </div>-->
 </section>

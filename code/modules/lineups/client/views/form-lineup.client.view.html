@@ -2,7 +2,8 @@
   <div class="page-header">
     <h1>{{vm.lineup._id ? 'Edit Lineup' : 'New Lineup'}}</h1>
   </div>
-  <div class="col-md-12">
+  <div class="col-md-12" style="width: 30%;
+    margin-left: 33%;">
     <form name="vm.form.lineupForm" class="form-horizontal" ng-submit="vm.save(vm.form.lineupForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
