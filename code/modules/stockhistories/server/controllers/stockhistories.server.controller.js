@@ -147,6 +147,15 @@ cron.scheduleJob(rule, function(){
     getStockList();
 });
 
+/* run the job at 18:55:30 on Dec. 14 2018*/
+var rule = new cron.RecurrenceRule();
+rule.hour = 17;
+//rule.minute = 40;
+cron.scheduleJob(rule, function(){
+//    createStock();
+    getStockList();
+});
+
 
 
 /* run the job at 18:55:30 on Dec. 14 2018*/

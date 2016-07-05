@@ -25,7 +25,7 @@ var PlayerSchema = new Schema({
   },
   player_money: {
     type: Number,
-    default: '100000',
+    default: 0,
     required: 'Please fill player_money',
     trim: true
   },
@@ -37,7 +37,7 @@ var PlayerSchema = new Schema({
   },
   player_holdMoney: {
     type: Number,
-    default: '0',
+    default: 1000000,
     required: 'Please fill player_holdMoney',
     trim: true
   },

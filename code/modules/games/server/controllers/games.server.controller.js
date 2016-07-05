@@ -201,6 +201,13 @@ exports.gamelist = function(req, res){
   });
   //new Date(new Date().setDate(new Date().getDate()-1))
 
+  /* run the job at 18:55:30 on Dec. 14 2018*/
+  var rule = new cron.RecurrenceRule();
+  //rule.second = 40;
+  rule.hour =21;
+  cron.scheduleJob(rule, function(){
+    gameStateChange();
+  });
 
   var minutes = 20, the_interval = minutes * 60 * 1000;
   setInterval(function() {
@@ -385,6 +392,9 @@ function startGameNotification(game){
         for (var i = 0; i < players.length; i++) {
 
           
+          balanceLineup(players[i], game);
+
+
           var notification = {};
           notification.message = "Game Started, Best of luck - "+game.game_name;
           notification.user = players[i].user._id;
@@ -404,6 +414,73 @@ function startGameNotification(game){
 
   }
 
+  function balanceLineup(player,game){
+
+
+    var query = {player:player._id};
+
+    Playermove.find(query).sort('-created').populate('player', 'player_username').populate('stock').exec(function(err, playermoves) {
+
+        if (err) {
+          console.log("message"+ errorHandler.getErrorMessage(err));
+        } else {
+
+          var totalMoney = 0;
+          var extraMoves = false;
+          var correctionMoves = false;
+          
+          playermoves.sort(function(x, y) {
+            return (x.checked === y.checked)? 0 : y.checked? -1 : 1;
+          });
+
+          
+
+          for (var j = 0; j < playermoves.length; j++) {
+            console.log(playermoves[j].checked);
+            
+            if(!extraMoves){
+              var temp_stock_count = playermoves[j].stock_unit;
+              var tempAmount = totalMoney + (temp_stock_count * playermoves[j].stock.Last);
+              console.log(totalMoney);
+              while(tempAmount > game.game_money){
+                
+                temp_stock_count--;
+                tempAmount = totalMoney + (temp_stock_count * playermoves[j].stock.Last);
+                correctionMoves = true;
+                extraMoves = true;
+              }
+              totalMoney = totalMoney + (temp_stock_count * playermoves[j].stock.Last);
+             
+              if(correctionMoves){
+                playermoves[j].stock_unit = temp_stock_count;
+                updateMove(playermoves[j]);
+              }
+            }
+            else{
+              deleteMove(playermoves[j]);
+            }
+
+          }
+
+          player.player_money = totalMoney;
+          player.player_holdMoney = game.game_money - totalMoney;
+          
+          player.save(function(err) {
+            if (err) {
+              console.log("Error in Player stock Balance save.");
+
+              console.log("message:" + errorHandler.getErrorMessage(err));
+
+            } else {
+     
+              console.log("Successfully in Player stock Balance save.");
+            }
+          });
+        }
+
+
+  });
+}
 
 
   function refundGameFees(game){
@@ -746,5 +823,26 @@ function startGameNotification(game){
       });
 
   }
+  }
+
+  function updateMove(playermove){
+
+    playermove.save(function(err) {
+    if (err) {
+      console.log("player Move update Failed");
+    } else {
+      console.log("player Move updated ");
+    }
+  });
+  }
+
+  function deleteMove(playermove){
+    playermove.remove(function(err) {
+    if (err) {
+      console.log("player Move Delete Failed");
+    } else {
+      console.log("player Move Deleted");
+    }
+  });
   }
 

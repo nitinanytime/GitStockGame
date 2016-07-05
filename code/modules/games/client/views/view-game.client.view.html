@@ -2,11 +2,57 @@
 
 <!--/ribbon-two-->
                        <h3 class="inner-tittle two">{{vm.player.player_username}}</h3>
+
+                       <div class="custom-widgets">
+                           <div class="row-one">
+                            <div class="col-md-3 widget">
+                              <div class="stats-left ">
+                                <h5>Game Status</h5>
+                                <h4> {{vm.game.game_status}}</h4>
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <div class="col-md-3 widget states-mdl">
+                              <div class="stats-left">
+                                <h5>Portfolio Worth</h5>
+                                <h4>{{vm.portfolio_value | setDecimal:2}}</h4>
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <div class="col-md-3 widget states-thrd">
+                              <div class="stats-left">
+                                <h5>Balance Money</h5>
+                                <h4>{{vm.balance_value | setDecimal:2}}</h4>
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <div class="col-md-3 widget states-last">
+                              <div class="stats-left">
+                                <h5>Total Players</h5>
+                                <h4>{{vm.players.length}}</h4>
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <div class="clearfix"> </div> 
+                          </div>
+                        </div>
+
                       <div class="ribbon-one graph">
                         <!--/ribbon-inner-->
                           <div class="ribbon-inner one">
                             <div class="ribbon1">
-                              <div class="ribbon-fold"><h4>Balance : {{vm.player.player_money | setDecimal:2}}</h4></div>
+                              <div class="ribbon-fold" ng-show="vm.player._id && vm.game.game_status==='Running'"><h4>
+                                Your Value : {{vm.running_value | setDecimal:2}}
+                              </h4>
+                              </div>
+                              <div class="ribbon-fold" ng-show="vm.player._id && vm.game.game_status==='Open'"><h4>
+                                Your Value : {{vm.game.game_money | setDecimal:2}}
+                              </h4>
+                              </div>
                             </div>
                             Game Start Time : {{vm.game.game_startTime | date:"medium"}}
                             <br>
@@ -69,7 +115,7 @@
           <h3>Calculated Price -> {{(vm.playermove.stock.Last) * (vm.playermove.stock_unit) | setDecimal:2}}</h3>
         </div>
         <div class="form-group">
-          <h3>Balance Money -> {{(vm.player.player_money) - ((vm.playermove.stock.Last) * (vm.playermove.stock_unit)) | setDecimal:2}}</h3>
+          <h3>Balance Money -> {{(vm.balance_value) - ((vm.playermove.stock.Last) * (vm.playermove.stock_unit)) | setDecimal:2}}</h3>
         </div>
         <button type="submit" class="btn btn-success">Buy</button>
         
@@ -97,7 +143,7 @@
           <h3>Calculated Price -> {{(vm.playermove.stock.Last) * (vm.playermove.stock_unit) | setDecimal:2}}</h3>
         </div>
         <div class="form-group">
-          <h3>Balance Money -> {{(vm.player.player_money) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit)) | setDecimal:2}}</h3>
+          <h3>Balance Money -> {{(vm.balance_value) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit)) | setDecimal:2}}</h3>
         </div>
         <button type="submit" class="btn btn-success">Save</button>
         
@@ -111,7 +157,7 @@
     </modal>
 
 
-  <modal title="Congratulation" visible="vm.playerLineupModel" >
+  <modal title="Import Lineup" visible="vm.playerLineupModel" >
       <div class="graph" style="font-size:1.75em">
      
                               <div class="tables">
@@ -120,6 +166,10 @@
                        <thead> <tr> <th>Lineup Name</th> <th> Amount</th></tr> </thead> <tbody> <tr  data-ng-repeat="lineup in vm.lineups" 
         > <th scope="row">{{lineup.name}}</th>  <td style="color:red;">{{lineup.total_money | setDecimal:2}}</td> <td><a class="btn green fifth" data-ng-click="vm.importLineup(lineup)">Import</a></td></tr> </tbody> </table> 
                               </div>
+
+                              <div class="alert alert-warning text-center" data-ng-if="vm.lineups.$resolved && !vm.lineups.length">
+    No Lineups yet, why don't you <a data-ui-sref="lineups.create" target="_self">create one</a>?
+  </div>
                         
                           </div>
     </modal>

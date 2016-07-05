@@ -135,14 +135,18 @@
                 // body...
                 console.log(data);
                 vm.playerStocks = data;
-                vm.player.player_money = vm.game.game_money;
+                vm.balance_value= 0;
+                vm.running_value = 0;
+                vm.portfolio_value = 0;
+
                 for (var i = 0; i < data.length; i++) {
 
-                    vm.player.player_money = vm.player.player_money - (data[i].stock_unit * data[i].stock.Last);
+                    vm.portfolio_value = vm.portfolio_value + (data[i].stock_unit * data[i].stock.Last);
 
                 }
-                console.log('value' + vm.game.game_money + parseFloat(vm.player.player_money).toFixed(2));
-                vm.running_value = vm.game.game_money - parseFloat(vm.player.player_money).toFixed(2);
+                vm.balance_value=  vm.game.game_money - vm.portfolio_value;
+
+                vm.running_value = vm.portfolio_value + parseFloat(vm.player.player_holdMoney);
                 /* vm.playerStocks = [];
      var stockSymbol = [];
       for(var i = 0; i < data.length; i++){
@@ -258,13 +262,17 @@
 
         // Save Game
         function joinGame(game) {
-            alert('yes');
+
+             if(vm.game.game_EntryFee > vm.authentication.user.user_balance){
+                alert("Please Add Money to create the game");
+                return false;
+            }
 
             console.log(vm.player);
+            vm.player = new PlayersService();
             vm.player.player_username = vm.authentication.user.username;
             vm.player.player_name = vm.authentication.user.displayName;
             vm.player.game = game._id;
-            vm.player.player_money = vm.game.game_money;
             vm.player.$save(successCallback, errorCallback);
 
             function successCallback(res) {
@@ -322,7 +330,7 @@
                     vm.playermove.stock = stock;
                     vm.playermove.game = vm.game._id;
                     vm.playermove.stock_unit = 1;
-                    vm.old_stock_unit = vm.playermove.stock_unit;
+                    vm.old_stock_unit = 0;
                     vm.buyStockModel = !vm.buyStockModel;
 
                 }
@@ -332,7 +340,7 @@
 
         function buyStockSave() {
             console.log(vm.playermove);
-            var remain_balance = (vm.player.player_money) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit));
+            var remain_balance = (vm.balance_value) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit));
             if (remain_balance < 0) {
                 alert("Balance required");
                 return false;
@@ -348,7 +356,7 @@
             updatePlayer();
 
             function updatePlayer() {
-                vm.player.player_money = remain_balance;
+                vm.balance_value = remain_balance;
                 vm.player.$update(successCallback, errorCallback);
             }
 
@@ -386,7 +394,7 @@
 
         function sellStockSave() {
 
-            var remain_balance = (vm.player.player_money) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit));
+            var remain_balance = (vm.balance_value) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit));
             if (remain_balance < 0) {
                 alert("Balance required");
                 return false;
@@ -400,7 +408,7 @@
             updatePlayer();
 
             function updatePlayer() {
-                vm.player.player_money = remain_balance;
+                vm.balance_value = remain_balance;
                 vm.player.$update(successCallback, errorCallback);
             }
 
@@ -420,6 +428,10 @@
 
         function save(isValid) {
 
+            if(vm.game.game_EntryFee > vm.authentication.user.user_balance){
+                alert("Please Add Money to create the game");
+                return false;
+            }
             console.log(vm.game);
             vm.game.game_startTime = new Date(vm.game.game_startTime);
             vm.game.game_endTime = new Date(vm.game.game_endTime);
@@ -434,13 +446,17 @@
                 vm.game.$update(successCallback, errorCallback);
             } else {
 
-                vm.game.$save(successCallback, errorCallback);
+                vm.game.$save(successJoingame, errorCallback);
             }
 
             function successCallback(res) {
                 $state.go('games.view', {
                     gameId: res._id
                 });
+            }
+            function successJoingame(res) {
+                joinGame(res);
+                
             }
 
             function errorCallback(res) {

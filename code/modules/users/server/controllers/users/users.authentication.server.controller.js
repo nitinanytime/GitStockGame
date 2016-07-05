@@ -7,7 +7,12 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   mongoose = require('mongoose'),
   passport = require('passport'),
-  User = mongoose.model('User');
+  User = mongoose.model('User'),
+  maxmind = require('maxmind'),
+  Converter = require("csvtojson").Converter;
+  
+ 
+
 
 // URLs for which user can't be redirected on signin
 var noReturnUrls = [
@@ -53,23 +58,44 @@ exports.signup = function (req, res) {
  * Signin after passport authentication
  */
 exports.signin = function (req, res, next) {
-  passport.authenticate('local', function (err, user, info) {
-    if (err || !user) {
-      res.status(400).send(info);
-    } else {
-      // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
+  
+  checkCity(req, 
+    function(rightCity){
 
-      req.login(user, function (err) {
-        if (err) {
-          res.status(400).send(err);
+      if (!rightCity) {
+    console.log(rightCity);
+    res.status(400).send("Sorry! not valid for this city");
+  } 
+
+  else {
+    passport.authenticate('local', function(err, user, info) {
+        if (err || !user) {
+            res.status(400).send(info);
         } else {
-          res.json(user);
+            // Remove sensitive data before login
+            user.password = undefined;
+            user.salt = undefined;
+
+            req.login(user, function(err) {
+                if (err) {
+                    res.status(400).send(err);
+                } else {
+                    res.json(user);
+                }
+            });
         }
-      });
+    })(req, res, next);
+}
     }
-  })(req, res, next);
+
+
+
+    );
+ 
+  
+  
+
+  
 };
 
 /**
@@ -239,3 +265,28 @@ exports.removeOAuthProvider = function (req, res, next) {
     }
   });
 };
+
+function checkCity(req, fn){
+
+  var ipadress = req.connection.remoteAddress;
+  var rightCity = false;
+  console.log(ipadress);
+  ipadress = '165.139.149.169';
+  var cityLookup = maxmind.open(path.resolve('./config/lib/GeoIP2-City.mmdb'));
+  var city = cityLookup.get(ipadress);
+  city = city.subdivisions[0].names.en;
+  console.log(city);
+  var converter = new Converter({});
+  converter.fromFile(path.resolve('./config/lib/block_city.csv'),function(err,result){
+ 
+  console.log(result);
+
+  for(var i = 0; i < result.length; i++){
+    if(city===result[i].city || city==null){
+      rightCity = true;
+    }
+  }
+  console.log(rightCity);
+  fn(rightCity);
+  });
+}
