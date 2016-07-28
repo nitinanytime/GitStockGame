@@ -45,12 +45,12 @@
                 <table class="table">
                     <tbody>
                         <tr class="table-row" ng-repeat="game in vm.filterStatus(vm.games)">
-                            <td class="table-img">
-                               <img src="https://lh3.googleusercontent.com/jTvV_FWI-VqQVS5o1ira-VnauuStEtqWmdXbZSSUVvJGo-91P6JLb3mZYUBdbUpHQC3RguoS=s50-h50-e365" alt="" />
+                            <td ><h4 >
+               <a data-ui-sref="games.view({ gameId: game._id })">{{game.game_name}}</a></h4>
                             </td>
                             <td class="table-text">
-                              <h6>{{game.game_name}}</h6>
-                                <p>Entry Fee - {{game.game_EntryFee}}</p>
+                              <h6>Entry Fee - {{game.game_EntryFee}}</h6>
+                               
                             </td>
                             <td>
                               <span ng-class="{'fam': game.game_status == 'Open' , 
@@ -62,9 +62,7 @@
                                 {{game.game_startTime}}
                             </td>
                           
-                             <td >
-               <a class="btn green fifth" data-ui-sref="games.view({ gameId: game._id })">Enter</a>
-                            </td>
+                             
                         </tr>
                       
                     </tbody>

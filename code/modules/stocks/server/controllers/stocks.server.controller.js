@@ -6,6 +6,7 @@
 var path = require('path'),
   mongoose = require('mongoose'),
   Stock = mongoose.model('Stock'),
+  Stockhistory = mongoose.model('Stockhistory'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   _ = require('lodash');
 
@@ -84,7 +85,10 @@ exports.delete = function(req, res) {
 /**
  * List of Stocks
  */
-exports.list = function(req, res) { 
+exports.list = function(req, res) {
+  req.query.Last = {
+                    $gte: 5
+                  };
   Stock.find(req.query).sort('-created').populate('user', 'displayName').exec(function(err, stocks) {
     if (err) {
       return res.status(400).send({
@@ -123,20 +127,31 @@ exports.stockByID = function(req, res, next, id) {
 
 
 /* run the job at 18:55:30 on Dec. 14 2018*/
-//var rule = new cron.RecurrenceRule();
-//rule.minutes = 20;
-//rule.minute = 55;
-//cron.scheduleJob(rule, function(){
-//    createStock();
-//    getStockList();
-//});
+var rule = new cron.RecurrenceRule();
+rule.hour = 9;
+rule.minute = 31;
+cron.scheduleJob(rule, function(){
+  console.log("Server Update imorning 9 AM");
+    createStock();
+    getStockList('Open');
+});
 
-var minutes = 50, the_interval = minutes * 60 * 1000;
+/* run the job at 18:55:30 on Dec. 14 2018*/
+var rule8 = new cron.RecurrenceRule();
+rule8.hour = 16;
+rule8.minute = 1;
+cron.scheduleJob(rule8, function(){
+  console.log("Server Update imorning 16 PM");
+    createStock();
+    getStockList('Close');
+});
+
+var minutes = 15, the_interval = minutes * 60 * 1000;
 setInterval(function() {
-  console.log("I am doing my 5 minutes check");
+  console.log("Server Update in 50 Minute");
   // do your stuff here
     createStock();
-    getStockList();
+    getStockList('None');
 }, the_interval);
 
 //http://finance.yahoo.com/webservice/v1/symbols/RAD/quote?format=json&view=detail
@@ -157,19 +172,19 @@ Yet to discuss-
 2. what will be our action , if stock price will increase and total money will be min or max to the player fantasy money.
 */
 
-function getStockList(){
+function getStockList(type){
   Stock.find().sort('-created').exec(function(err, stocks) {
     if (err) {
       return null;
     } else {
       
-      updateStock(stocks);
+      updateStock(stocks, type);
     }
   });
 }
 
 
-function updateStock(stocks){
+function updateStock(stocks, type){
 
 //console.log(stocks.length);
 
@@ -193,15 +208,16 @@ for(var j = 0; j < stocks.length; j++){
 
 //console.log(stockRequest);
 
-updateTheseStock(stockRequest);
+updateTheseStock(stockRequest, type);
 }
-console.log("stock updated Successfully");
+console.log("stock updated Successfully at "+ new Date());
 };
 
 
-function updateTheseStock(stockRequest){
+function updateTheseStock(stockRequest, type){
   var optionsget = {
     host : 'finance.yahoo.com',
+    headers: {'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; MotoE2(4G-LTE) Build/MPI24.65-39) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.81 Mobile Safari/537.36'},
     path : '/webservice/v1/symbols/'+stockRequest+'/quote?format=json&view=detail', // the rest of the url with parameters if needed
     method : 'GET' // do GET
 };
@@ -223,10 +239,12 @@ http.get(optionsget,
     var stockList = [];
 
     try{
+        //console.log(data);
         data = JSON.parse(data);
         stockList = data.list.resources;
     }catch(e){
-        console.log(e.message); //error in the above string(in this case,yes)!
+      console.log("Error in Yahoo API Response +" + e);
+       // console.log(e.message); //error in the above string(in this case,yes)!
     }
     
     console.log("total stock updated"+ stockList.length);
@@ -242,6 +260,14 @@ http.get(optionsget,
         //stock.CategoryOrIndustry = stockList[i].symbol;
         //stock.Open = stockList[i].symbol;
         //stock.Close = stockList[i].symbol;
+        if(type === 'Open'){
+          stock.Open = element.price;
+          saveInStockHistory(element);
+        }
+        if(type === 'Close'){
+          stock.Close = element.price;
+          saveInStockHistory(element);
+        }
         stock.High = element.day_high;
         stock.Low = element.day_low;
         stock.Last = element.price;
@@ -322,6 +348,42 @@ function sleep(milliseconds) {
       break;
     }
   }
+}
+
+function saveInStockHistory(element){
+
+    var stockhistory = new Stockhistory();
+    stockhistory.Symbol = element.symbol;
+    stockhistory.Name = element.name;
+        //stock.Market = stockList[i].symbol;
+        //stock.MostLiquidExchange = stockList[i].symbol;
+        //stock.CategoryOrIndustry = stockList[i].symbol;
+        //stock.Open = stockList[i].symbol;
+        //stock.Close = stockList[i].symbol;
+        stockhistory.High = element.day_high;
+        stockhistory.Low = element.day_low;
+        stockhistory.Last = element.price;
+        //stock.LastSize = stockList[i].symbol;
+        stockhistory.Volume = element.volume;
+        //stock.PreviousClose = stockList[i].symbol;
+
+        stockhistory.ChangeFromPreviousClose = element.change;
+        stockhistory.PercentChangeFromPreviousClose = element.chg_percent;
+        stockhistory.High52Weeks = element.year_high;
+        stockhistory.Low52Weeks = element.year_low;
+        //stock.Currency = stockList[i].symbol;
+        //stock.TradingHalted = stockList[i].symbol;
+        stockhistory.Time = element.utctime;
+
+        //console.log(stock);
+
+        stockhistory.save(function(err) {
+          if (err) {
+              console.log( "message:" + errorHandler.getErrorMessage(err));
+          } else {
+              console.log( "Stockhistory Done");
+          }
+      });
 }
 //entry, commission setup, interest rate setup etc
 

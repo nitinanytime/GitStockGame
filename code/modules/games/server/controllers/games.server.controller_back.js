@@ -5,7 +5,6 @@
    */
    var path = require('path'),
    mongoose = require('mongoose'),
-   async = require('async'),
    Game = mongoose.model('Game'),
    Player = mongoose.model('Player'),
    Adminstuf = mongoose.model('Adminstuf'),
@@ -39,17 +38,14 @@
     game.game_startTime = new Date(game.game_startTime).setHours(5,0,0);
     game.game_endTime = new Date(game.game_endTime).setHours(12,0,0);
 
-    if(game.user.roles.indexOf('admin')>0){
-      console.log('admin created game');
-    }else{  
-      game.game_name = getGameName(game);
-      console.log('User created game' + game.game_name);
-    }
-
     game.game_startTime =  game.game_startTime.toISOString();
     game.game_endTime = game.game_endTime.toISOString();
 
-    
+    if(game.user.roles.includes('admin')){
+      console.log('admin created game');
+    }else{
+      console.log('User created game');
+    }
 
 console.log(game);
     game.save(function(err) {
@@ -209,7 +205,7 @@ exports.gamelist = function(req, res){
   var rule2 = new cron.RecurrenceRule();
   //rule.second = 40;
   rule2.hour =9;
-  rule2.minute = 35;
+  rule2.minute = 10;
   cron.scheduleJob(rule2, function(){
     console.log("Game Start Check at" + new Date());
     gameStateChange();
@@ -236,7 +232,7 @@ exports.gamelist = function(req, res){
 
 
 
-  function agameLeaderBoardChange(){
+  function gameLeaderBoardChange(){
     var query = null;
     var winningArray = [];
       Game.find({game_status : 'Running'}).sort('-created').populate('user').exec(function(err, games) {
@@ -244,10 +240,8 @@ exports.gamelist = function(req, res){
           console.log("message:" + errorHandler.getErrorMessage(err));
 
         } else {
-          console.log("1"+games.length);
           
           for(var j = 0; j < games.length; j++){
-            console.log("2"+ j +games[j].game_name);
             var game = games[j];
             var query = {game:game._id};
             Player.find(query).sort('-created').populate('user').populate('game', 'game_name').exec(function(err, players) {
@@ -256,7 +250,7 @@ exports.gamelist = function(req, res){
 
               } else {
 
-                console.log("2"+ j +players.length);
+                console.log(players.length);
 
                 game.game_EntryMoney = players.length * game.game_EntryFee;
 
@@ -265,19 +259,19 @@ exports.gamelist = function(req, res){
 
             var player = players[i];
 
-            Playermove.find(query).sort('-created').populate('player').populate('stock').exec(player,function(err, playermoves) {
+            Playermove.find(query).sort('-created').populate('player').populate('stock').exec(function(err, playermoves) {
 
               if (err) {
                console.log("message"+ errorHandler.getErrorMessage(err));
              } else {
 
-              console.log("3"+ i +playermoves.length);
-              var playername = player.player_username;
+              console.log(playermoves.length);
+              var playername = '';
               var totalStock = playermoves.length;
               var totalMoney = player.player_holdMoney;
 
               for (var k = 0; k < playermoves.length; k++) {
-                
+                playername = playermoves[k].player.player_username;
                 totalMoney = totalMoney + (playermoves[k].stock_unit * playermoves[k].stock.Last);
               }
 
@@ -286,7 +280,7 @@ exports.gamelist = function(req, res){
                 return parseFloat(b.totalMoney) - parseFloat(a.totalMoney);
               });
               if(players.length == winningArray.length){
-                console.log("game "+ game.game_name +winningArray); 
+                console.log(winningArray); 
                 game.winningArray = winningArray;
                 game.save(function(err) {
                 if (err) {
@@ -308,7 +302,6 @@ exports.gamelist = function(req, res){
       });
 
     }
-
 
 
 
@@ -580,7 +573,7 @@ function balanceLineup(player,game){
 
  
 
-  function acalculateWinner(game){
+  function calculateWinner(game){
     var query = {game:game._id};
     var winningArray = [];
     console.log('winning calculation');
@@ -910,258 +903,4 @@ function balanceLineup(player,game){
     }
   });
   }
-
-function getGames(query, fn){
-    Game.find(query).sort('-created').populate('user').exec(function(err, games) {
-        if (err) {
-          console.log("message:" + errorHandler.getErrorMessage(err));
-
-        } else {
-          fn(games);
-    }
-  });
-  }
-
-  function getPlayers(query, fn){
-    Player.find(query).sort('-created').populate('user').populate('game', 'game_name').exec(function(err, players) {
-              if (err) {
-                console.log("message"+ errorHandler.getErrorMessage(err));
-
-              }else {
-          fn(players);
-    }
-  });
-  }
-
-  function getPlayerMoves(query,fn){
-    Playermove.find(query).sort('-created').populate('player').populate('stock').exec(player,function(err, playermoves) {
-
-              if (err) {
-               console.log("message"+ errorHandler.getErrorMessage(err));
-             } else {
-
-            fn(playermoves);  
-    }
-  });
-  }
-
-
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
-  }
-}
-
-
-  function gameLeaderBoardChange() {
-
-    Game.find({ game_status: 'Running' }).sort('-created').populate('user').exec(function(err, games) {
-        if (err) {
-            console.log("message:" + errorHandler.getErrorMessage(err));
-
-        } else {
-
-            async.forEach(games, function(game, callback) {
-                var query = { game: game._id };
-                console.log(query);
-                var winningArray = [];
-                Player.find(query).sort('-created').populate('user').populate('game', 'game_name').exec(function(err, players) {
-                    if (err) {
-                        console.log("message" + errorHandler.getErrorMessage(err));
-
-                    } else {
-
-                        game.game_EntryMoney = players.length * game.game_EntryFee;
-
-                        async.forEach(players, function(player, callback) {
-
-                            console.log(player.player_username);
-
-
-                            var playerquery = { player: player._id };
-                            Playermove.find(playerquery).sort('-created').populate('player').populate('stock').exec(player, function(err, playermoves) {
-
-                                if (err) {
-                                    console.log("message" + errorHandler.getErrorMessage(err));
-                                } else {
-
-                                    var playername = player.player_username;
-                                    var totalStock = playermoves.length;
-                                    var totalMoney = player.player_holdMoney;
-
-                                    for (var k = 0; k < playermoves.length; k++) {
-
-                                        totalMoney = totalMoney + (playermoves[k].stock_unit * playermoves[k].stock.Last);
-                                    }
-
-                                    winningArray.push({ playername: playername, totalMoney: totalMoney, totalStock: totalStock, winingAmount: 0 });
-                                    winningArray.sort(function(a, b) {
-                                        return parseFloat(b.totalMoney) - parseFloat(a.totalMoney);
-                                    });
-                                    if (players.length == winningArray.length) {
-                                        console.log("game " + game.game_name + winningArray);
-                                        game.winningArray = winningArray;
-                                        game.save(function(err) {
-                                            if (err) {
-                                                console.log("Game LeaderBoard Faliure");
-
-                                            } else {
-                                                console.log("Game LeaderBoard Updated" + game.game_name);
-
-                                            }
-
-                                        });
-
-                                    }
-
-
-                                }
-                            });
-
-
-
-
-                        }, function(err) {
-                            // All users are processed
-                            // Here the finished result
-                            console.log(err);
-                        });
-                    }
-                });
-
-            }, function(err) {
-                // All users are processed
-                // Here the finished result
-                console.log(err);
-            });
-
-
-        }
-    });
-
-
-
-}
-
-function calculateWinner(game){
-    var query = {game:game._id};
-    var winningArray = [];
-    console.log('winning calculation');
-    Player.find(query).sort('-created').populate('user').populate('game', 'game_name').exec(function(err, players) {
-      if (err) {
-        console.log("message"+ errorHandler.getErrorMessage(err));
-
-        
-      } else {
-
-        console.log(players.length);
-
-        game.game_EntryMoney = players.length * game.game_EntryFee;
-
-        async.forEach(players, function(player, callback) {
-          var playerquery = { player: player._id };
-
-          Playermove.find(playerquery).sort('-created').populate('player', 'player_username').populate('stock').exec(player,function(err, playermoves) {
-
-            if (err) {
-             console.log("message"+ errorHandler.getErrorMessage(err));
-           } else {
-             var playername = player.player_username;
-             var totalStock = playermoves.length;
-             var totalMoney = player.player_holdMoney;
-
-              for (var k = 0; k < playermoves.length; k++) {
-
-                   totalMoney = totalMoney + (playermoves[k].stock_unit * playermoves[k].stock.Last);
-                   
-                   }
-
-              winningArray.push({ playername: playername, totalMoney: totalMoney, totalStock: totalStock, winingAmount: 0 });
-              winningArray.sort(function(a, b) {
-                    return parseFloat(b.totalMoney) - parseFloat(a.totalMoney);
-                  });
-            if(players.length === winningArray.length){
-              console.log(winningArray); 
-              priceDistribution(game, winningArray);
-              callback('Game Closed Success');
-          }
-          }
-        });
-         
-        var notification = {};
-        notification.message = "Game Complete, please check your luck - "+game.game_name;
-        notification.user = player.user._id;
-        notification.href = "/games/"+game._id;
-        notification.image = "/imgaes/gamenotify.png";
-        notification.category = "game";
-
-        notificationHandler.sendNotification(notification);
-        }, function(err) {
-                // All users are processed
-                // Here the finished result
-                console.log(err);
-            });
-
-
-
-      }
-    });
-
-
-  }
-
-  function getGameName(game){
-    var result = "";
-    var market = "NYSE/NASDAQ ";
-    var end = game.game_endTime.getTime();
-    var start =game.game_startTime.getTime();
-    console.log(end + ' -- '+ start);
-    var days = Math.round((end-start)/(1000*60*60*24));
-    console.log(days);
-    var price = null;
-
-    var commision = ((game.game_EntryFee * game.game_minPlayer) * game.game_winningRule.value_2)/100;
-
-    var winnerMoney = (game.game_EntryFee * game.game_minPlayer) - commision;
-
-    //var admin = updateAdminBalance('ADD', commision, game);
-
-    if(game.game_winningRule.key === 'winner_take_all'){
-      price = winnerMoney;
-      
-    }
-
-    if(game.game_winningRule.key === 'top_2_winner'){
-      price = (winnerMoney *65)/100;
-    }
-
-    if(game.game_winningRule.key === 'top_3_winner'){
-      price = (winnerMoney *50)/100;
-    }
-
-    if(game.game_winningRule.key === 'top_5_winner'){
-      price = (winnerMoney *30)/100;
-      
-    }
-
-    if(game.game_winningRule.key === 'top_10_winner'){
-      price = winnerMoney;
-      
-    }
-
-    if(game.game_winningRule.key === '50_50'){
-      price = (winnerMoney *50)/100;
-    }
-
-    result = market +' '+ days + ' Day [$'+ price + ' to first]  ';
-
-    return result;
-
-
-  }
-
-
 

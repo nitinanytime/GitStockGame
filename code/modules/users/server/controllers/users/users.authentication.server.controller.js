@@ -269,7 +269,7 @@ exports.removeOAuthProvider = function (req, res, next) {
 function checkCity(req, fn){
 
   var ipadress = req.connection.remoteAddress;
-  var rightCity = false;
+  var rightCity = true;
   console.log(ipadress);
   ipadress = '165.139.149.169';
   var cityLookup = maxmind.open(path.resolve('./config/lib/GeoIP2-City.mmdb'));
@@ -283,7 +283,7 @@ function checkCity(req, fn){
 
   for(var i = 0; i < result.length; i++){
     if(city===result[i].city || city==null){
-      rightCity = true;
+      rightCity = false;
     }
   }
   console.log(rightCity);

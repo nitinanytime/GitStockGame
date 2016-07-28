@@ -12,8 +12,6 @@ var mongoose = require('mongoose'),
 var GameSchema = new Schema({
   game_name: {
     type: String,
-    default: '',
-    required: 'Please fill Game name',
     trim: true
   },
   game_type: {
@@ -31,6 +29,7 @@ var GameSchema = new Schema({
   },
   winningArray: [{
     playername: String,
+    player: Schema.ObjectId,
     totalStock: Number,
     totalMoney: Number,
     winingAmount: Number

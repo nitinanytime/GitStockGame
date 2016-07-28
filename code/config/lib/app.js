@@ -9,6 +9,9 @@ var config = require('../config'),
   chalk = require('chalk'),
   seed = require('./seed');
 
+process.env.TZ = 'America/New_York';
+
+console.log('server started at - ' + new Date().toISOString());
 
 function seedDB() {
   if (config.seedDB && config.seedDB.seed) {
@@ -45,7 +48,7 @@ module.exports.start = function start(callback) {
       // Logging initialization
       console.log('--');
       console.log(chalk.green(config.app.title));
-      console.log();
+      console.log(new Date());
       console.log(chalk.green('Environment:     ' + process.env.NODE_ENV));
       console.log(chalk.green('Server:          ' + server));
       console.log(chalk.green('Database:        ' + config.db.uri));

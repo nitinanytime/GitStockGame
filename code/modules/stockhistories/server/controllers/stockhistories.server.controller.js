@@ -139,22 +139,22 @@ exports.stockhistoryByID = function(req, res, next, id) {
 
 
 /* run the job at 18:55:30 on Dec. 14 2018*/
-var rule = new cron.RecurrenceRule();
-rule.hour = 9;
+//var rule4 = new cron.RecurrenceRule();
+//rule4.hour = 9;
 //rule.minute = 40;
-cron.scheduleJob(rule, function(){
+//cron.scheduleJob(rule4, function(){
 //    createStock();
-    getStockList();
-});
+//    getStockList();
+//});
 
 /* run the job at 18:55:30 on Dec. 14 2018*/
-var rule = new cron.RecurrenceRule();
-rule.hour = 17;
+//var rule7 = new cron.RecurrenceRule();
+//rule7.hour = 16;
 //rule.minute = 40;
-cron.scheduleJob(rule, function(){
+//cron.scheduleJob(rule7, function(){
 //    createStock();
-    getStockList();
-});
+ //   getStockList();
+//});
 
 
 
@@ -214,6 +214,7 @@ console.log("stock updated Successfully");
 function updateTheseStock(stockRequest){
   var optionsget = {
     host : 'finance.yahoo.com',
+    headers: {'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; MotoE2(4G-LTE) Build/MPI24.65-39) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.81 Mobile Safari/537.36'},
     path : '/webservice/v1/symbols/'+stockRequest+'/quote?format=json&view=detail', // the rest of the url with parameters if needed
     method : 'GET' // do GET
 };

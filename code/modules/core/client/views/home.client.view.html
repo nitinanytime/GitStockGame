@@ -184,7 +184,7 @@
                         </div>
                       </form>-->
 
-                     <h4> <span style="float:right;">Next Start:  {{nextliveValue}}</span></h4>
+                     <!--<h4> <span style="float:right;">Next Start:  {{nextliveValue}}</span></h4>-->
                               <div class="tables" style="height:450px;">
                                 <table class="table table-hover">
                                
@@ -192,7 +192,7 @@
     font-size: 1.6em;"> <tr> <th>Game</th> <th> Contest</th> <th>Entry Fee</th> <th>Total Prizes</th> <th>Entries</th> <th>Live</th> <th>Join</th></tr> </thead> <tbody style="    background: white;
     font-size: 1.4em;
     overflow-y: scroll;"> <tr  data-ng-repeat="game in games | filter:searchGame | limitTo:20" 
-      ng-show="!{{game.game_player == game.game_minPlayer}}" > <th scope="row"><img src="https://lh3.googleusercontent.com/jTvV_FWI-VqQVS5o1ira-VnauuStEtqWmdXbZSSUVvJGo-91P6JLb3mZYUBdbUpHQC3RguoS=s50-h50-e365"/></th> <td>{{game.game_name}}</td> <td>${{game.game_EntryFee}}</td>  <td>${{(game.game_minPlayer*game.game_EntryFee)-(((game.game_minPlayer*game.game_EntryFee)*10)/100)}}</td> <td>{{game.game_player}}/{{game.game_minPlayer}}</td> <td style="color:red;">{{game.game_startTime| date:"medium"}}</td> <td><a class="btn green fifth" data-ui-sref="games.view({ gameId: game._id })">Enter</a></td></tr> </tbody> </table> 
+      ng-show="!{{game.game_player == game.game_minPlayer}}" > <th scope="row"><img src="https://lh3.googleusercontent.com/jTvV_FWI-VqQVS5o1ira-VnauuStEtqWmdXbZSSUVvJGo-91P6JLb3mZYUBdbUpHQC3RguoS=s50-h50-e365"/></th> <td>{{game.game_name}}</td> <td>${{game.game_EntryFee}}</td>  <td>${{(game.game_minPlayer*game.game_EntryFee)-(((game.game_minPlayer*game.game_EntryFee)*10)/100)}}</td> <td>{{game.game_player}}/{{game.game_minPlayer}}</td> <td style="color:red;">{{game.game_startTime| date: 'medium' : '-0000'}}</td> <td><a class="btn green fifth" data-ui-sref="games.view({ gameId: game._id })">Enter</a></td></tr> </tbody> </table> 
                               </div>
                         
                           </div>

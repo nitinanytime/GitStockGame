@@ -1,3 +1,13 @@
+ "price": "99.870003",
+
+- scheduler timing for start and adjustment.
+- representation correction for portfolio value + cash.
+- competitor's portfolio. show.
+- remove check box after game start.
+- ADD stock in adjustment.
+- Value decimals and calculation errors.
+
+
   function balanceLineup(player,game){
 
 
@@ -12,27 +22,32 @@
           var totalMoney = 0;
           var extraMoves = false;
           var correctionMoves = false;
-          console.log(playermoves);
+          
           playermoves.sort(function(x, y) {
-            return (x.checked === y.checked)? 0 : x.checked? -1 : 1;
+            return (x.checked === y.checked)? 0 : y.checked? -1 : 1;
           });
-          console.log(playermoves);
+
+          
 
           for (var j = 0; j < playermoves.length; j++) {
+            console.log(playermoves[j].checked);
+            
             if(!extraMoves){
               var temp_stock_count = playermoves[j].stock_unit;
               var tempAmount = totalMoney + (temp_stock_count * playermoves[j].stock.Last);
-              
+              console.log(totalMoney);
               while(tempAmount > game.game_money){
                 
                 temp_stock_count--;
                 tempAmount = totalMoney + (temp_stock_count * playermoves[j].stock.Last);
                 correctionMoves = true;
+                extraMoves = true;
               }
-              totalMoney = totalMoney + (playermoves[j].temp_stock_count * playermoves[j].stock.Last);
+              totalMoney = totalMoney + (temp_stock_count * playermoves[j].stock.Last);
+             
               if(correctionMoves){
                 playermoves[j].stock_unit = temp_stock_count;
-                saveMove(playermoves[j].stock_unit);
+                updateMove(playermoves[j]);
               }
             }
             else{
@@ -41,12 +56,15 @@
 
           }
 
-
+          player.player_money = totalMoney;
           player.player_holdMoney = game.game_money - totalMoney;
           
           player.save(function(err) {
             if (err) {
               console.log("Error in Player stock Balance save.");
+
+              console.log("message:" + errorHandler.getErrorMessage(err));
+
             } else {
      
               console.log("Successfully in Player stock Balance save.");
@@ -55,8 +73,9 @@
         }
 
 
-  }
+  });
 }
+
 
 
 Edit the game creation page.

@@ -11,9 +11,9 @@
 
     function GamesController($scope, $state, Users, Authentication, game, player, playermove, StocksService, PlayersService, PlayermovesService, LineupsService, AdminstufsService) {
         var vm = this;
-
+        vm.Math = window.Math;
         vm.authentication = Authentication;
-        $scope.todaydate = new Date().toString();
+        
         vm.joingameModal = false;
         vm.game = game;
         vm.player = player;
@@ -24,6 +24,7 @@
         vm.save = save;
         vm.joinGame = joinGame;
         vm.stocks = StocksService.query();
+        vm.reverseMoney = 0;
         vm.buyStockModel = false;
         vm.sellStockModel = false;
         vm.buyThisStock = buyThisStock;
@@ -39,6 +40,9 @@
         vm.getPlayerLineup = getPlayerLineup;
         vm.playerLineupModel = false;
         vm.importLineup = importLineup;
+
+        vm.otherPlayerPortfolioModel = false;
+        vm.getPlayerPortfolio = getPlayerPortfolio;
 
         vm.old_stock_unit = 0;
         vm.remain_balance = 0;
@@ -66,6 +70,17 @@
         $scope.$watch('payout', function(value) {
             console.log(value);
         }, true);
+
+
+            var todaydate = new Date();
+            var time = todaydate.getHours(); 
+            console.log(time);
+            if (time < 9) {
+                todaydate.setDate(todaydate.getDate() - 1);
+                $scope.todaydate = todaydate.toString();
+            }else{
+                $scope.todaydate = todaydate.toString();
+            }
 
 
 
@@ -144,9 +159,10 @@
                     vm.portfolio_value = vm.portfolio_value + (data[i].stock_unit * data[i].stock.Last);
 
                 }
-                vm.balance_value=  vm.game.game_money - vm.portfolio_value;
+                vm.balance_value=  vm.player.player_holdMoney;
+                
 
-                vm.running_value = vm.portfolio_value + parseFloat(vm.player.player_holdMoney);
+                vm.running_value = vm.portfolio_value + parseFloat(vm.balance_value);
                 /* vm.playerStocks = [];
      var stockSymbol = [];
       for(var i = 0; i < data.length; i++){
@@ -220,6 +236,32 @@
             });
         }
 
+        
+
+        function getPlayerPortfolio(playername) {
+            vm.otherPlayerPortfolioModel =false;
+            PlayersService.query({
+            game: vm.game._id,
+            player_username: playername
+        }, function(data) {
+            // body...
+            var player = data[0];
+            console.log(player);
+            vm.otherPlayer = player;
+              PlayermovesService.query({
+                player: player._id
+            }, function(result) {
+                console.log(result);
+               vm.otherPlayerPortfolioModel = !vm.otherPlayerPortfolioModel;
+               vm.otherPlayerPortfolio = result;
+
+            });
+
+        });
+
+          
+        }
+
         function importLineup(lineup) {
 
             console.log(lineup);
@@ -262,9 +304,10 @@
 
         // Save Game
         function joinGame(game) {
+            
 
              if(vm.game.game_EntryFee > vm.authentication.user.user_balance){
-                alert("Please Add Money to create the game");
+                alert("Please Add Money to create/Join the game");
                 return false;
             }
 
@@ -276,12 +319,13 @@
             vm.player.$save(successCallback, errorCallback);
 
             function successCallback(res) {
-                $state.go('games.view', {
-                    gameId: game._id
-                });
-                vm.joingameModal = !vm.joingameModal;
+                
+                //vm.joingameModal = !vm.joingameModal;
                 vm.players.push(vm.player);
                 updateGame();
+                $state.go('games.view', {
+                    gameId: game._id
+                }, {reload: true});
             }
 
             function updateGame() {
@@ -310,6 +354,15 @@
 
         // Save Game
         function buyThisStock(stock) {
+            if(!vm.player._id){
+                var r = confirm("Want to join the game?");
+                if (r == true) {
+                    joinGame(vm.game);
+                } else {
+                    return;
+                }
+            }
+            vm.reverseMoney = null;
             console.log(stock);
             PlayermovesService.query({
                 player: vm.player._id
@@ -345,6 +398,13 @@
                 alert("Balance required");
                 return false;
             }
+
+            var stock_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
+            if (stock_money > vm.game.game_money / 4) {
+                alert("You cant buy same share with more than 25% of fantacy money");
+                return false;
+            }
+
             vm.playermove.stock_price = vm.playermove.stock.Last;
             vm.playermove.type = 'BUY';
             vm.playermove.total_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
@@ -357,6 +417,7 @@
 
             function updatePlayer() {
                 vm.balance_value = remain_balance;
+                vm.player.player_holdMoney = remain_balance;
                 vm.player.$update(successCallback, errorCallback);
             }
 
@@ -399,6 +460,17 @@
                 alert("Balance required");
                 return false;
             }
+
+            if (vm.playermove.stock.Last < 5 && (vm.old_stock_unit - vm.playermove.stock_unit)<0) {
+                alert("Sorry! Yoou can't buy more stocks pricing less than $5");
+                return false;
+            }
+
+            var stock_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
+            if (stock_money > vm.game.game_money / 4) {
+                alert("You cant buy same share with more than 25% of fantacy money");
+                return false;
+            }
             console.log(vm.playermove);
             vm.playermove.stock_price = vm.playermove.stock.Last;
             vm.playermove.total_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
@@ -409,6 +481,7 @@
 
             function updatePlayer() {
                 vm.balance_value = remain_balance;
+                vm.player.player_holdMoney = remain_balance;
                 vm.player.$update(successCallback, errorCallback);
             }
 

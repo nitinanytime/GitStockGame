@@ -15,7 +15,7 @@
         
     <form name="vm.form.gameForm" class="form-horizontal" ng-submit="vm.save(vm.form.gameForm.$valid)"  novalidate>
       <fieldset>
-        <div class="form-group" show-errors>
+        <div class="form-group" ng-show='vm.addPayout'  show-errors>
           <label class="control-label" for="game_name">Game Name</label>
           <input name="game_name" type="text" ng-model="vm.game.game_name" id="game_name" class="form-control" placeholder="game_name" required>
           <div ng-messages="vm.form.gameForm.game_name.$error" role="alert">

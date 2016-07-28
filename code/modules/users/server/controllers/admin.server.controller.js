@@ -98,8 +98,10 @@ exports.userByID = function (req, res, next, id) {
  /* run the job for getting the player rank daily*/
   var rule = new cron.RecurrenceRule();
   //rule.seconds = 40;
-  rule.hour = 9;
+  rule.hour = 23;
+  rule.minute = 10;
   cron.scheduleJob(rule, function(){
+    console.log('User Rank Update -' +new Date());
     userRankRefresh();
   });
 

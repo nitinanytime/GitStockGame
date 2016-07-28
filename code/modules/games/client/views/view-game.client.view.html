@@ -1,11 +1,26 @@
 <section>
 
 <!--/ribbon-two-->
-                       <h3 class="inner-tittle two">{{vm.player.player_username}}</h3>
+                       
+                       <div>
+                      <div style="    float: left; margin-left: 2%;"> 
+                      <h4>{{vm.game.game_name}}</h4>
+                      </div>
+                      <div style="    float: right; margin-right: 2%;">
+                        
+                             
+                            <h5>Start Time : {{vm.game.game_startTime | date: 'medium' : '-0000'}}</h5>
+                           
+                            <h5>End Time : {{vm.game.game_endTime | date: 'medium' : '-0000'}}</h5>
 
+                          
+                         <!--/ribbon-inner-->
+                      </div>
+                      </div>
+                      <div class="clearfix"> </div> 
                        <div class="custom-widgets">
                            <div class="row-one">
-                            <div class="col-md-3 widget">
+                           <div class="col-md-2 widget">
                               <div class="stats-left ">
                                 <h5>Game Status</h5>
                                 <h4> {{vm.game.game_status}}</h4>
@@ -13,26 +28,43 @@
                               
                               <div class="clearfix"> </div> 
                             </div>
-                            <div class="col-md-3 widget states-mdl">
-                              <div class="stats-left">
-                                <h5>Portfolio Worth</h5>
-                                <h4>{{vm.portfolio_value | setDecimal:2}}</h4>
+                            
+                             <div class="col-md-2 widget" >
+                              <div class="stats-left ">
+                                <h5>Your Value</h5>
+                                <h4>${{vm.running_value | setDecimal:2}}</h4>
                               </div>
                               
                               <div class="clearfix"> </div> 
                             </div>
-                            <div class="col-md-3 widget states-thrd">
+                            <div class="col-md-2 widget states-mdl">
                               <div class="stats-left">
-                                <h5>Balance Money</h5>
-                                <h4>{{vm.balance_value | setDecimal:2}}</h4>
+                                <h5>Stock Value</h5>
+                                <h4>${{vm.portfolio_value | setDecimal:2}}</h4>
                               </div>
                               
                               <div class="clearfix"> </div> 
                             </div>
-                            <div class="col-md-3 widget states-last">
+                            <div class="col-md-2 widget states-thrd">
+                              <div class="stats-left">
+                                <h5>Cash Balance</h5>
+                                <h4>${{vm.balance_value | setDecimal:2}}</h4>
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <div class="col-md-2 widget states-last" ng-show="vm.game.game_status==='Open'">
                               <div class="stats-left">
                                 <h5>Total Players</h5>
-                                <h4>{{vm.players.length}}</h4>
+                                <h4>{{vm.players.length}}/{{vm.game.game_minPlayer}}</h4>
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <div class="col-md-2 widget states-last" ng-show="vm.game.game_status==='Running'">
+                              <div class="stats-left">
+                                <h5>Current Rank</h5>
+                                <h4>{{vm.myRank}}/{{vm.players.length}}</h4>
                               </div>
                               
                               <div class="clearfix"> </div> 
@@ -41,37 +73,17 @@
                           </div>
                         </div>
 
-                      <div class="ribbon-one graph">
-                        <!--/ribbon-inner-->
-                          <div class="ribbon-inner one">
-                            <div class="ribbon1">
-                              <div class="ribbon-fold" ng-show="vm.player._id && vm.game.game_status==='Running'"><h4>
-                                Your Value : {{vm.running_value | setDecimal:2}}
-                              </h4>
-                              </div>
-                              <div class="ribbon-fold" ng-show="vm.player._id && vm.game.game_status==='Open'"><h4>
-                                Your Value : {{vm.game.game_money | setDecimal:2}}
-                              </h4>
-                              </div>
-                            </div>
-                            Game Start Time : {{vm.game.game_startTime | date:"medium"}}
-                            <br>
-                            Game End Time : {{vm.game.game_endTime | date:"medium"}}
-
-                          </div>
-
-                         <!--/ribbon-inner-->
-                      </div>
                        <!--//ribbon-two-->
-  <div class="page-header">
-    <h1 data-ng-bind="vm.game.game_name"></h1>
+
+  <div>
+    
     <a class="btn green fifth" ng-show="!vm.player._id && vm.game.game_status==='Open'" data-ng-click="vm.joinGame(vm.game)">Join Game</a>
     
     
     <a class="btn green fifth" ng-show="vm.player._id && vm.game.game_status==='Open'" data-ng-click="vm.getPlayerLineup()">Import LineUp</a>
 
   </div>
-  <div class="pull-right"
+  <!--<div class="pull-right"
        data-ng-show="vm.game.isCurrentUserOwner">
     <a class="btn btn-primary"
        data-ui-sref="games.edit({ gameId: vm.game._id })">
@@ -80,43 +92,32 @@
     <a class="btn btn-primary" data-ng-click="vm.remove()">
       <i class="glyphicon glyphicon-trash"></i>
     </a>
-  </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span data-ng-bind="vm.game.created | date:'mediumDate'"></span>
-      by
-      <span data-ng-if="vm.game.user"
-            data-ng-bind="vm.game.user.displayName"></span>
-      <span data-ng-if="!vm.game.user">Deleted User</span>
-    </em>
-
-  </small>
-  <p class="lead" data-ng-bind="vm.game.content"></p>
-
-<modal title="Stock Buy" visible="vm.buyStockModel" >
+  </div>-->
+  
+<modal title="Buy Stock" visible="vm.buyStockModel" ><h4 style="    margin-top: -53px;
+    float: right;
+    margin-right: 30px;">{{vm.playermove.stock.Last}}/ {{vm.playermove.stock.Symbol}}</h4>
       <form role="form" ng-submit="vm.buyStockSave()">
         <div class="form-group">
-          <label for="email">Stock Units</label>
+          <label for="email">Shares</label>
           <input type="number" min="1" class="form-control"  ng-model="vm.playermove.stock_unit"/>
         </div>
         
         <div class="form-group">
-          <label for="checked">Check For set as Dilute</label>
+          <label for="checked">Adjust at Game Start <img src="/images/help.png" title="Prices may change before the start of the game. Adjusting stocks allows us to buy or sell stocks in portfolios at game kickoff to ensure everyone starts with $1,000,000. If nothing is checked, the bottommost stock is bought or sold first."></label>
           <input type="checkbox" class="form-control"  ng-model="vm.playermove.checked"  />
+
         </div>
         
-        <div class="form-group">
-          <label for="comment">Comment</label>
-          <input type="text" class="form-control"  ng-model="vm.playermove.comment"  />
-        </div>
+        
        
        <div class="form-group">
-          <h3>Calculated Price -> {{(vm.playermove.stock.Last) * (vm.playermove.stock_unit) | setDecimal:2}}</h3>
+          <h3>Calculated Price : ${{(vm.playermove.stock.Last) * (vm.playermove.stock_unit) | setDecimal:2}}</h3>
         </div>
         <div class="form-group">
-          <h3>Balance Money -> {{(vm.balance_value) - ((vm.playermove.stock.Last) * (vm.playermove.stock_unit)) | setDecimal:2}}</h3>
+          <h3>Cash Remaining : ${{(vm.balance_value) - ((vm.playermove.stock.Last) * (vm.playermove.stock_unit)) | setDecimal:2}}</h3>
         </div>
+        <input placeholder="How much you want to spend?" onfocus="this.type='number';" class="form-control" ng-model="vm.reverseMoney" max="vm.balance_value" ng-change="vm.playermove.stock_unit = vm.Math.round(vm.reverseMoney / vm.playermove.stock.Last)" required/>
         <button type="submit" class="btn btn-success">Buy</button>
         
       </form>
@@ -125,27 +126,24 @@
     <modal title="Stock Update" visible="vm.sellStockModel" >
       <form role="form" ng-submit="vm.sellStockSave()">
         <div class="form-group">
-          <label for="email">Stock Units</label>
+          <label for="email">Shares</label>
           <input type="number" min="0" class="form-control"  ng-model="vm.playermove.stock_unit"/>
         </div>
 
         <div class="form-group">
-          <label for="checked">Check For set as Dilute</label>
+          <label for="checked">Adjust at Game Start <img src="/images/help.png" title="Prices may change before the start of the game. Adjusting stocks allows us to buy or sell stocks in portfolios at game kickoff to ensure everyone starts with $1,000,000. If nothing is checked, the bottommost stock is bought or sold first."></label>
           <input type="checkbox" class="form-control"  ng-model="vm.playermove.checked"  />
         </div>
         
-        <div class="form-group">
-          <label for="comment">Comment</label>
-          <input type="text" class="form-control"  ng-model="vm.playermove.comment"  />
-        </div>
-       
+      
        <div class="form-group">
-          <h3>Calculated Price -> {{(vm.playermove.stock.Last) * (vm.playermove.stock_unit) | setDecimal:2}}</h3>
+          <h3>Calculated Price : ${{(vm.playermove.stock.Last) * (vm.playermove.stock_unit) | setDecimal:2}}</h3>
         </div>
         <div class="form-group">
-          <h3>Balance Money -> {{(vm.balance_value) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit)) | setDecimal:2}}</h3>
+          <h3>Cash Remaining :  ${{(vm.balance_value) + ((vm.playermove.stock.Last) * (vm.old_stock_unit - vm.playermove.stock_unit)) | setDecimal:2}}</h3>
         </div>
-        <button type="submit" class="btn btn-success">Save</button>
+        <input placeholder="How much you want to spend?" onfocus="this.type='number';" class="form-control" ng-model="vm.reverseMoney" max="vm.balance_value" ng-change="vm.playermove.stock_unit = vm.Math.round(vm.reverseMoney / vm.playermove.stock.Last)" required/>
+        <button type="submit" class="btn btn-success" >Save</button>
         
 
       </form>
@@ -164,12 +162,31 @@
                                 <table class="table table-hover">
                                 
                        <thead> <tr> <th>Lineup Name</th> <th> Amount</th></tr> </thead> <tbody> <tr  data-ng-repeat="lineup in vm.lineups" 
-        > <th scope="row">{{lineup.name}}</th>  <td style="color:red;">{{lineup.total_money | setDecimal:2}}</td> <td><a class="btn green fifth" data-ng-click="vm.importLineup(lineup)">Import</a></td></tr> </tbody> </table> 
+        > <th scope="row">{{lineup.name}}</th>  <td style="color:red;">${{lineup.total_money | setDecimal:2}}</td> <td><a class="btn green fifth" data-ng-click="vm.importLineup(lineup)">Import</a></td></tr> </tbody> </table> 
                               </div>
 
                               <div class="alert alert-warning text-center" data-ng-if="vm.lineups.$resolved && !vm.lineups.length">
     No Lineups yet, why don't you <a data-ui-sref="lineups.create" target="_self">create one</a>?
   </div>
+                        
+                          </div>
+    </modal>
+
+     <modal title="Player Portfolio" visible="vm.otherPlayerPortfolioModel" >
+      <div class="graph" style="font-size:1.55em; overflow-y:scroll; height:450px;">
+      
+      <h6>Balance Money-: {{vm.otherPlayer.player_holdMoney | setDecimal:2}}</h6>
+     
+                              <div class="tables">
+                                <table class="table table-hover" >
+                              
+                       <thead> <tr><th>Stock Symbol</th> <th>Shares</th> <th>Price</th> <th>Total Value</th></tr> </thead> <tbody> <tr  data-ng-repeat="playerStock in vm.otherPlayerPortfolio" 
+       > <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{playerStock.stock.Symbol}}</th> <td>{{playerStock.stock_unit}}</td> 
+       <td>${{(playerStock.stock.Last) | setDecimal:2}}</td>
+       <td>${{(playerStock.stock_unit)*(playerStock.stock.Last) | setDecimal:2}}</td>  </tr> </tbody> </table> 
+                              </div>
+
+                             
                         
                           </div>
     </modal>
@@ -235,21 +252,11 @@ Date : {{playerMove.created}} "
                           </div>
 </div>
 <div class="col-md-6 list-group" ng-show="vm.game.game_status==='Running'">
-  <h4  ></h4>
-            <div class="col-md-3 widget" style="width: 100%;">
-                    <div class="stats-left ">
-                        <h5>Your</h5>
-                            <h4> {{vm.running_value}}</h4>
-                    </div>
-                    <div class="stats-right">
-                        <label>Current Rank <p>{{vm.myRank}}</p></label>
-                    </div>
-                    <div class="clearfix"> </div> 
-            </div>
- <h4  >Game Running</h4>
+  
+ <h4  >Leader Board</h4>
 
                               <div class="graph" style="font-size:1.20em">
-                              <div class="tables" style="overflow-y:scroll; height:630px;">
+                              <div class="tables" style="overflow-y:scroll; height:650px;">
                                 <table class="table table-hover">
                                 <form action="#" method="GET">
                         <div class="input-group input-group-in">
@@ -264,7 +271,7 @@ Date : {{playerMove.created}} "
        <td ng-if="winner.playername === vm.player.player_username"  ng-init="vm.myRank = $index + 1"style="color:green;">{{winner.playername}}</td> 
        <td ng-if="winner.playername !== vm.player.player_username" >{{winner.playername}}</td> 
        <td>{{winner.totalStock}}</td> 
-       <td>{{winner.totalMoney |setDecimal:2}}</td> 
+       <td ng-click="vm.getPlayerPortfolio(winner.playername)">${{winner.totalMoney |setDecimal:2}}</td> 
        </tr> </tbody> </table> 
                               </div>
                         
@@ -301,16 +308,31 @@ Date : {{playerMove.created}} "
                           </span>
                         </div><!-- Input Group -->
                       </form>
-                              <div class="tables" style="overflow-y:scroll; height:650px;">
+                              <div class="tables" style="overflow-y:scroll; height:600px;">
                                 <table class="table table-hover">
                               
-                       <thead> <tr> <th> </th> <th>Stock Symbol</th> <th>Shares</th> <th>Value</th> <th>Sell</th> </tr> </thead> <tbody> <tr  data-ng-repeat="playerStock in vm.playerStocks | filter:searchStockLineUp | limitTo:20" 
-       > <td><input type="checkbox" ng-model="playerStock.checked"></input></td> <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{playerStock.stock.Symbol}}</th> <td>{{playerStock.stock_unit}}</td> <td>{{(playerStock.stock_unit)*(playerStock.stock.Last) | setDecimal:2}}</td>  <td><span style="font-size: 1.5em;" ng-show="vm.game.game_status==='Open'" data-ng-click="vm.sellThisStock(playerStock.stock)" class="fam">X</span></td></tr> </tbody> </table> 
+                       <thead> <tr> <th ng-show="vm.game.game_status==='Open'"> </th> <th>Stock Symbol</th> <th>Shares</th> <th>Price</th> <th>Total Value</th> <th ng-show="vm.game.game_status==='Open'">Sell</th> </tr> </thead> <tbody> <tr  data-ng-repeat="playerStock in vm.playerStocks | filter:searchStockLineUp | limitTo:20" 
+       > <td ng-show="vm.game.game_status==='Open'"><input type="checkbox" ng-model="playerStock.checked"></input></td> <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{playerStock.stock.Symbol}}</th> <td>{{playerStock.stock_unit}}</td> 
+       <td>${{(playerStock.stock.Last) | setDecimal:2}}</td>
+       <td>${{(playerStock.stock_unit)*(playerStock.stock.Last) | setDecimal:2}}</td>  <td><span style="font-size: 1.5em;" ng-show="vm.game.game_status==='Open'" data-ng-click="vm.sellThisStock(playerStock.stock)" class="fam">X</span></td></tr> </tbody> </table> 
                               </div>
                         
                           </div>
 </div>
 <div class="clearfix"></div>
+<small>
+    <em class="text-muted">
+      Posted on
+      <span data-ng-bind="vm.game.created | date:'mediumDate'"></span>
+      by
+      <span data-ng-if="vm.game.user"
+            data-ng-bind="vm.game.user.displayName"></span>
+      <span data-ng-if="!vm.game.user">Deleted User</span>
+    </em>
+
+  </small>
+  <p class="lead" data-ng-bind="vm.game.content"></p>
+
   <!-- <div class="page-header">
     <h1>Stocks</h1>
   </div>
@@ -333,7 +355,7 @@ Date : {{playerMove.created}} "
     No Stocks yet, why don't you <a data-ui-sref="stocks.create">create one</a>?
   </div>-->
 
-<div class="page-header">
+<!--<div class="page-header">
     <h1>Players</h1>
   </div>
   <div class="list-group">
@@ -349,7 +371,7 @@ Date : {{playerMove.created}} "
       </small>
       <h4 class="list-group-item-heading" data-ng-bind="player.name"></h4>
     </a>
-  </div>
+  </div>-->
   
  
 </section>
