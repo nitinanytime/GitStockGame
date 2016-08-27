@@ -18,10 +18,13 @@
     vm.remove = remove;
     vm.save = save;
 
-    vm.userBalance = vm.authentication.user.userBalance;
+    vm.userBalance = vm.authentication.user.user_balance;
     vm.paynow = false;
     vm.creditCard = false;
     vm.credit_card = {};
+
+    
+    vm.paymentAmount = false;
 
 
   
@@ -35,6 +38,11 @@
 
     // Save Paymenthistory
     function save(isValid) {
+
+      if(vm.paymenthistory.amount > vm.userBalance){
+        alert('Not suficient balance');
+        return false;
+      }
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.form.paymenthistoryForm');
         return false;

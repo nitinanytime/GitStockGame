@@ -40,9 +40,14 @@ vm.filterMyCreation = function(games) {
       console.log(data);
       vm.players = data;
       console.log(vm.players);
+
       for(var i = 0; i < vm.players.length; i++){
-    	vm.games.push(vm.players[i].game); 
-}
+        if(vm.players[i].game === null){
+
+        }
+    	   else{vm.games.push(vm.players[i].game); 
+         }
+    }
       
     });
 

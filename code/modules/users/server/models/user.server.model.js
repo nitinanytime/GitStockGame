@@ -56,8 +56,16 @@ var UserSchema = new Schema({
   },
   user_balance: {
     type: Number,
-    default: 10,
+    default: 0,
     trim: true
+  },
+  user_payments: {
+    debit: {type:Number,
+            default: 0},
+    credit: {type:Number,
+            default: 0}, //size
+    bonus: {type:Number,
+            default: 0}  //commission
   },
   email: {
     type: String,
@@ -77,6 +85,9 @@ var UserSchema = new Schema({
   password: {
     type: String,
     default: ''
+  },
+  user_birthday: {
+    type: Date
   },
   salt: {
     type: String

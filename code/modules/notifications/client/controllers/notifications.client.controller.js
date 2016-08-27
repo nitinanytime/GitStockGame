@@ -21,7 +21,7 @@
     // Remove existing Notification
     function remove() {
       if (confirm('Are you sure you want to delete?')) {
-        vm.notification.$remove($state.go('notifications.list'));
+        vm.notification.$remove($state.go('notifications.list', {}, {reload: true}));
       }
     }
 

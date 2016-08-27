@@ -15,6 +15,12 @@ module.exports = function(app) {
   app.route('/api/paymenthistories/page/:page').all()
     .get(paymenthistories.paymenthistorieslist)
 
+  app.route('/api/sendPayoutBulk').all(paymenthistoriesPolicy.isAllowed)
+    .get(paymenthistories.sendPayoutBulk)
+
+  app.route('/api/paymenthistory/update').all()
+    .put(paymenthistories.updateAdmin)
+
   app.route('/api/paymenthistories/success').all()
     .get(paymenthistories.success); 
 

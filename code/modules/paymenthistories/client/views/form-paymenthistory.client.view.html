@@ -1,20 +1,77 @@
-vb<section>
+<section>
   <div class="page-header">
-    <h1>{{vm.paymenthistory._id ? 'Edit Paymenthistory' : 'New Paymenthistory'}}</h1>
+    <h1>{{vm.paymenthistory._id ? 'Edit Paymenthistory' : 'New Payment Deposit'}}</h1>
   </div>
 
    <modal title="Confirmation" visible="vm.paynow" >
      <h3>{{vm.message}}</h3>
-      <a class="btn green fifth" href="{{vm.payUrl}}">Confirm</a>
+      <a class="btn green fifth" href="{{vm.payUrl}}" target="_self">Confirm</a>
     </modal>
 
-  <div class="col-md-5" style="float: none;
-    margin: 0 auto;">
+  <div class="col-md-5">
     <form name="vm.form.paymenthistoryForm" class="form-horizontal" ng-submit="vm.save(vm.form.paymenthistoryForm.$valid)" novalidate>
       <fieldset>
+        <div class="custom-widgets" ng-init="vm.paymenthistory.amount=10">
+                           <div class="row-one">
+                    <div class="col-md-3 widget3 states-last">
+                              <div class="stats-left">
+                               <h4>$10</h4>
+                               <h5>$10.00 <br>Bonus Credits</h5>
+                                <h5><input type="radio" ng-model="vm.paymenthistory.amount" ng-value="10"/></h5>
+                               
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            
+                            <div class="col-md-3 widget3 states-last" >
+                              <div class="stats-left">
+                              <h4>$25</h4>
+                              <h5>$25.00 Bonus Credits</h5>
+                              <h5><input type="radio" ng-model="vm.paymenthistory.amount" ng-value="25"/></h5>
+                                
+                                
+                                
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <div class="col-md-3 widget3 states-last">
+                              <div class="stats-left">
+                               <h4>$50</h4>
+                               <h5>$50.00 Bonus Credits</h5>
+                                <h5><input type="radio" ng-model="vm.paymenthistory.amount" ng-value="50"/></h5>
+                               
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <div class="col-md-3 widget3 states-last">
+                              <div class="stats-left">
+                               <h4>$100</h4>
+                               <h5>$100.00 Bonus Credits</h5>
+                                <h5><input type="radio" ng-model="vm.paymenthistory.amount" ng-value="100"/></h5>
+                               
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>
+                            <!--<div class="col-md-3 widget3 states-last">
+                              <div class="stats-left">
+                               <h4>Other</h4>
+                               <h5>$Bonus Credits As Payment</h5>
+                                <h5><input type="radio" ng-model="vm.paymenthistory.amount" ng-value="0" ng-click="vm.paymentAmount = 'true'"
+                                /></h5>
+                               
+                              </div>
+                              
+                              <div class="clearfix"> </div> 
+                            </div>-->
+                            <div class="clearfix"> </div> 
+                          </div>
+                        </div>
 
-
-      <div class="form-group" show-errors>
+      <div class="form-group" ng-show="vm.paymentAmount" show-errors>
           <label class="control-label" for="amount">Amount</label>
           <input name="amount" type="number" ng-model="vm.paymenthistory.amount" min="0" id="amount" class="form-control" placeholder="amount" required>
           <div ng-messages="vm.form.paymenthistoryForm.amount.$error" role="alert">
@@ -22,8 +79,8 @@ vb<section>
           </div>
       </div>
 
-        <div class="form-group" show-errors>
-          <label class="control-label" for="payment_method">payment_method</label>
+        <div class="form-group mainselection" show-errors>
+          <label class="control-label" for="payment_method">Payment Method</label>
           
         <select name="payment_method" ng-model="vm.paymenthistory.payment_method" id="payment_method" ng-change="paymentMethod()" required>
       <option value="paypal">paypal</option>
@@ -36,7 +93,8 @@ vb<section>
           </div>
 
 
-        <div class="form-group" style="margin-left:45px;" ng-show="vm.creditCard" >
+        <div class="form-group" style="    margin-left: 10%;
+    margin-right: 14%;" ng-show="vm.creditCard" >
           <div class="form-group">
           <label for="email">Credit Card Number</label>
           <input type="number" class="form-control"  ng-model="vm.credit_card.number"/>
@@ -81,16 +139,28 @@ vb<section>
 
         <div class="form-group" show-errors>
           <label class="control-label" for="description">Description</label>
-          <input name="description" type="text" ng-model="vm.paymenthistory.description" id="description" class="form-control" placeholder="description" required>
+          <input name="description" type="text" ng-model="vm.paymenthistory.description" id="description" class="form-control" placeholder="description(Optional)">
       </div>
 
         <div class="form-group">
-          <button type="submit" class="btn btn-default">{{vm.paymenthistory._id ? 'Update' : 'Create'}}</button>
+          <button type="submit" class="btn btn-default">{{vm.paymenthistory._id ? 'Update' : 'Continue'}}</button>
         </div>
         <div ng-show="vm.error" class="text-danger">
           <strong ng-bind="vm.error"></strong>
         </div>
       </fieldset>
     </form>
+  </div>
+  <div class="col-md-5" style="float: right;" >
+    <img src="http://i.imgur.com/W0WoTTK.png">
+    
+    <ul>
+      <li><h5>&#8226; Win real money</h5></li>
+      <li><h5>&#8226; Hassle free cash out</h5></li>
+      <li><h5>&#8226; No season-long commitment</h5></li>
+      <li><h5>&#8226; Both Paypal and Credit card supported</h5></li>
+      <li><img src="http://www.garageserviceswatford.co.uk/communities/9/004/008/057/749//images/4611702244_295x33.png"></li>
+    </ul>
+
   </div>
 </section>

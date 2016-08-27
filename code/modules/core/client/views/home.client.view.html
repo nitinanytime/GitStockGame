@@ -1,6 +1,6 @@
 
 
-<section ng-controller="HomeController">
+<section>
  
 
           <!-- //header-ends -->
@@ -8,8 +8,8 @@
                 <!--custom-widgets-->
 
 
-                <!--/bottom-grids-->     
-                 <div class="bottom-grids">
+                <!--/bottom-grids class="bottom-grids"-->     
+                 <div >
                     <div class="dev-table">    
                       <div class="col-md-4 dev-col">                                    
 
@@ -88,7 +88,7 @@
                         </div>-->
                         <div class="custom-widgets" style="float: none;
                             text-align: center;
-    margin-bottom: 40px;">
+    margin-bottom: 15px;">
                          <h4 style="color: #C8E632;">Sign up and get $5 free on your first deposit of more than $50</h4>
                         </div>
 
@@ -158,6 +158,9 @@
 
 </div>
                         <!--/candile-->
+
+
+<div ng-include="'/modules/games/client/views/game_modal.html'"></div>
                        <div class="col-md-12 stats-grid" ng-init="init()">
                                   <!--<div class="stats-head">
                                       <h4 class="title3">
@@ -189,10 +192,10 @@
                                 <table class="table table-hover">
                                
                        <thead style="    background: #1D1C1E;
-    font-size: 1.6em;"> <tr> <th>Game</th> <th> Contest</th> <th>Entry Fee</th> <th>Total Prizes</th> <th>Entries</th> <th>Live</th> <th>Join</th></tr> </thead> <tbody style="    background: white;
-    font-size: 1.4em;
+    font-size: 1.6em;"> <tr>  <th> Contest</th> <th>Entry Fee</th> <th>Total Prizes</th> <th>Entries</th> <th>Live</th> <th></th></tr> </thead> <tbody style="    background: white;
+    font-size: 1.5em;
     overflow-y: scroll;"> <tr  data-ng-repeat="game in games | filter:searchGame | limitTo:20" 
-      ng-show="!{{game.game_player == game.game_minPlayer}}" > <th scope="row"><img src="https://lh3.googleusercontent.com/jTvV_FWI-VqQVS5o1ira-VnauuStEtqWmdXbZSSUVvJGo-91P6JLb3mZYUBdbUpHQC3RguoS=s50-h50-e365"/></th> <td>{{game.game_name}}</td> <td>${{game.game_EntryFee}}</td>  <td>${{(game.game_minPlayer*game.game_EntryFee)-(((game.game_minPlayer*game.game_EntryFee)*10)/100)}}</td> <td>{{game.game_player}}/{{game.game_minPlayer}}</td> <td style="color:red;">{{game.game_startTime| date: 'medium' : '-0000'}}</td> <td><a class="btn green fifth" data-ui-sref="games.view({ gameId: game._id })">Enter</a></td></tr> </tbody> </table> 
+      ng-show="!{{game.game_player == game.game_minPlayer}}" style="border-top: 1px solid rgba(158, 158, 160, 0.15);" > <td ng-click="getGame(game)"><a style="cursor: pointer;">{{game.game_name}}</a></td> <td>${{game.game_EntryFee}}</td>  <td>${{(game.game_minPlayer*game.game_EntryFee)-(((game.game_minPlayer*game.game_EntryFee)*10)/100) |number:2}}</td> <td>{{game.game_player}}/{{game.game_minPlayer}}</td> <td style="color:red;">{{game.game_startTime| date: 'medium' : '-0000'}}</td> <td><a class="greenlink fifth" data-ui-sref="games.view({ gameId: game._id })">Enter</a></td></tr> </tbody> </table> 
                               </div>
                         
                           </div>

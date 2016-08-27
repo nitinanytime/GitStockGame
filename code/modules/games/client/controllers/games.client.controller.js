@@ -15,7 +15,9 @@
         vm.authentication = Authentication;
         
         vm.joingameModal = false;
+        vm.gameModal = false;
         vm.game = game;
+        vm.game.game_prize = (vm.game.game_minPlayer*vm.game.game_EntryFee)-(((vm.game.game_minPlayer*vm.game.game_EntryFee)*10)/100);
         vm.player = player;
         vm.myRank = 0;
         vm.error = null;
@@ -27,6 +29,7 @@
         vm.reverseMoney = 0;
         vm.buyStockModel = false;
         vm.sellStockModel = false;
+        vm.reverseRound = reverseRound;
         vm.buyThisStock = buyThisStock;
         vm.sellThisStock = sellThisStock;
         vm.buyStockSave = buyStockSave;
@@ -34,7 +37,8 @@
         vm.playermove = playermove;
         vm.getWinnerRule = getWinnerRule;
         vm.addPayout = false;
-
+        vm.game_EntryFees = [1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 100, 200, 500, 1000];
+        vm.game_minPlayers = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30, 35, 40, 45, 50, 75, 100];
 
 
         vm.getPlayerLineup = getPlayerLineup;
@@ -134,10 +138,22 @@
             }
         };
 
+        function reverseRound(){
+            vm.playermove.stock_unit = Math.floor(vm.reverseMoney / vm.playermove.stock.Last);
+            if((vm.playermove.stock_unit * vm.playermove.stock.Last)>vm.reverseMoney){
+                vm.playermove.stock_unit = vm.playermove.stock_unit -1;
+
+            }
+
+            if((vm.playermove.stock_unit * vm.playermove.stock.Last)>(vm.game.game_money/4)){
+                vm.playermove.stock_unit = Math.floor((vm.game.game_money/4) / vm.playermove.stock.Last);
+            }
+        }
+
         // Remove existing Game
         function remove() {
             if (confirm('Are you sure you want to delete?')) {
-                vm.game.$remove($state.go('games.list'));
+                vm.game.$remove($state.go('games.list', {}, {reload: true}));
             }
         }
 
@@ -159,10 +175,20 @@
                     vm.portfolio_value = vm.portfolio_value + (data[i].stock_unit * data[i].stock.Last);
 
                 }
-                vm.balance_value=  vm.player.player_holdMoney;
+                if(vm.game.game_status==='Open'){
+                    vm.balance_value=  vm.game.game_money - vm.portfolio_value;
+                
+
+                    vm.running_value = vm.game.game_money;
+
+                }
+                else{
+                    vm.balance_value=  vm.player.player_holdMoney;
                 
 
                 vm.running_value = vm.portfolio_value + parseFloat(vm.balance_value);
+                }
+                
                 /* vm.playerStocks = [];
      var stockSymbol = [];
       for(var i = 0; i < data.length; i++){
@@ -204,6 +230,7 @@
         }
       
       */
+      
 
             });
         }
@@ -323,15 +350,16 @@
                 //vm.joingameModal = !vm.joingameModal;
                 vm.players.push(vm.player);
                 updateGame();
-                $state.go('games.view', {
-                    gameId: game._id
-                }, {reload: true});
+               
             }
 
             function updateGame() {
                 vm.game.game_player = vm.game.game_player + 1;
                 console.log('Game reduce');
                 console.log(vm.game.game_player);
+                 $state.go('games.view', {
+                    gameId: game._id
+                },{reload: true});
                 //  vm.game.$update(null,null); 
                 //vm.authentication.user.user_balance = vm.authentication.user.user_balance - vm.game.game_EntryFee;
                 //updateUser(vm.authentication.user)
@@ -383,6 +411,7 @@
                     vm.playermove.stock = stock;
                     vm.playermove.game = vm.game._id;
                     vm.playermove.stock_unit = 1;
+                    vm.playermove.checked = true;
                     vm.old_stock_unit = 0;
                     vm.buyStockModel = !vm.buyStockModel;
 
@@ -424,6 +453,7 @@
             function successCallback(res) {
                 vm.buyStockModel = !vm.buyStockModel;
                 getPlayerMoves(null);
+                // $state.reload();
             }
 
             function errorCallback(res) {
@@ -471,6 +501,13 @@
                 alert("You cant buy same share with more than 25% of fantacy money");
                 return false;
             }
+
+            if(vm.playermove.stock_unit <= 0 ){
+                vm.playermove.$delete(null, null);
+                vm.sellStockModel = !vm.sellStockModel;
+                getPlayerMoves(null);
+                return false;
+            }
             console.log(vm.playermove);
             vm.playermove.stock_price = vm.playermove.stock.Last;
             vm.playermove.total_money = vm.playermove.stock_unit * vm.playermove.stock.Last;
@@ -501,14 +538,15 @@
 
         function save(isValid) {
 
-            if(vm.game.game_EntryFee > vm.authentication.user.user_balance){
+            if(vm.game.game_EntryFee > vm.authentication.user.user_balance && vm.addPayout === false){
                 alert("Please Add Money to create the game");
                 return false;
             }
             console.log(vm.game);
+            vm.game.game_prize = 0;
             vm.game.game_startTime = new Date(vm.game.game_startTime);
             vm.game.game_endTime = new Date(vm.game.game_endTime);
-            vm.game_payOut = $scope.payout;
+            vm.game.game_payOut = $scope.payout;
             if (!isValid) {
                 $scope.$broadcast('show-errors-check-validity', 'vm.form.gameForm');
                 return false;
@@ -525,11 +563,12 @@
             function successCallback(res) {
                 $state.go('games.view', {
                     gameId: res._id
-                });
+                },{reload: true});
             }
             function successJoingame(res) {
-                joinGame(res);
-                
+                if(vm.addPayout === false){
+                    joinGame(res);
+                }
             }
 
             function errorCallback(res) {

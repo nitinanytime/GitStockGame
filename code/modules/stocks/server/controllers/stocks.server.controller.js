@@ -148,7 +148,7 @@ cron.scheduleJob(rule8, function(){
 
 var minutes = 15, the_interval = minutes * 60 * 1000;
 setInterval(function() {
-  console.log("Server Update in 50 Minute");
+  console.log("Server Update in 15 Minute");
   // do your stuff here
     createStock();
     getStockList('None');

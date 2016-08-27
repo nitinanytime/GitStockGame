@@ -1,0 +1,191 @@
+  <modal title="Contest Details" visible="vm.gameModal" >
+      
+
+      <div>
+      <div style="float: left; ">
+        <h5>Entry fee: ${{vm.game.game_EntryFee | number:2}} | Prizes: {{vm.game.game_prize | number:2}}</h5>
+        <h5>Entries: {{vm.game.game_player}}/{{vm.game.game_minPlayer}} | </h5>
+      </div>
+      <div style="float: right;">
+        <h5>Live In: {{vm.game.game_startTime | date: 'medium' : '-0000'}}</h5>
+        <h5>End: {{vm.game.game_endTime | date: 'medium' : '-0000'}}</h5>
+      </div>
+        
+      </div>
+      <div class="clearfix"></div>
+                        <!--/ribbon-inner-->
+                          <div class="ribbon-inner Wrapper">
+                            <div class="ribbon left_ribbon">
+                              <h3>{{vm.game.game_name}}</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="col-md-6" style="float: left; font-size: 1.6em; ">
+
+                              <h5>Summary:</h5>
+                              <h6>{{vm.game.game_description}}</h6>
+                              <div class="clearfix"></div>
+                              <h5>Entries:</h5>
+                                <div class="tables Wrapper">
+                                <table class="table">
+                                <form action="#" method="GET">
+                        <div class="input-group input-group-in">
+                          <input type="text" ng-model="searchPlayer" name="search" class="form-control2 input-search" placeholder="Search...">
+                          <span class="input-group-btn">
+                            <button class="btn btn-success" type="button"><i class="fa fa-search"></i></button>
+                          </span>
+                        </div><!-- Input Group -->
+                      </form>
+                       <thead> <tr> <th>Player Name</th></tr> </thead> <tbody style="overflow-y:scroll;"> <tr  data-ng-repeat="player in vm.players | filter:searchPlayer | limitTo:5" 
+       > <th scope="row">{{player.player_username}}</th> 
+       <th scope="row" ng-click="vm.getPlayerPortfolio(player.player_username)"><i class="fa fa-file-text-o"></i></th> 
+       </tr> </tbody> </table> 
+                              </div>
+
+                            </div>
+                            <div class="col-md-6" style="float: right; font-size: 1.6em;">
+                              <h5>Prize Payout:</h5>
+                             <div class="tables">
+<table class="table" ng-show="vm.game.game_winningRule.key==='winner_take_all'">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Prize</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>1st</th>
+                <th>${{vm.game.game_prize | number:2}}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="tables" ng-show="vm.game.game_winningRule.key==='50_50'">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Prize</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>1st</th>
+                <th>${{(vm.game.game_prize * 50)/100 | number:2}}</th>
+            </tr>
+            <tr>
+                <th>2nd</th>
+                <th>${{(vm.game.game_prize * 50)/100 | number:2}}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="tables" ng-show="vm.game.game_winningRule.key==='top_2_winner'">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Prize</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>1st</th>
+                <th>${{(vm.game.game_prize * 65)/100 | number:2}}</th>
+            </tr>
+            <tr>
+                <th>2nd</th>
+                <th>${{(vm.game.game_prize * 35)/100 | number:2}}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="tables" ng-show="vm.game.game_winningRule.key==='top_3_winner'">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Prize</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>1st</th>
+                <th>${{(vm.game.game_prize * 50)/100 | number:2}}</th>
+            </tr>
+            <tr>
+                <th>2nd</th>
+                <th>${{(vm.game.game_prize * 30)/100 | number:2}}</th>
+            </tr>
+            <tr>
+                <th>3rd</th>
+                <th>${{(vm.game.game_prize * 20)/100 | number:2}}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="tables" ng-show="vm.game.game_winningRule.key==='top_5_winner'">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Prize</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>1st</th>
+                <th>${{(vm.game.game_prize * 30)/100 | number:2}}</th>
+            </tr>
+            <tr>
+                <th>2nd</th>
+                <th>${{(vm.game.game_prize * 25)/100 | number:2}}</th>
+            </tr>
+            <tr>
+                <th>3rd</th>
+                <th>${{(vm.game.game_prize * 20)/100 | number:2}}</th>
+            </tr>
+            <tr>
+                <th>4th</th>
+                <th>${{(vm.game.game_prize * 15)/100 | number:2}}</th>
+            </tr>
+            <tr>
+                <th>5th</th>
+                <th>${{(vm.game.game_prize * 10)/100 | number:2}}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="tables" ng-show="vm.game.game_winningRule.key==='prize_payout'">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>To Rank</th>
+                <th>Money</th>
+            </tr>
+        </thead>
+        <tbody style="overflow-y:scroll; height: 300px;">
+            <tr data-ng-repeat="payout in vm.game.game_payOut">
+                <th>{{payout.min}}</th>
+                <th>{{payout.max}}</th>
+                <th>${{payout.money}}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+                            </div>
+
+
+                              <div class="ribbon both_ribbon">
+                                <a data-ui-sref="games.view({ gameId: vm.game._id })" target="_self"><h3>Start Trading</h3>
+                              </div></a>
+                          </div>
+                         <!--/ribbon-inner-->
+                      
+</modal>
+

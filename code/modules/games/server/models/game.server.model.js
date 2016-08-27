@@ -92,10 +92,15 @@ var GameSchema = new Schema({
     value_1: Number, //size
     value_2: Number  //commission
   },
-  game_payOut: {
+  game_payOut: [{
     min: Number,
     max: Number,
     money: Number
+  }],
+  game_description: {
+    type: String,
+    default: null,
+    trim: true
   },
   created: {
     type: Date,

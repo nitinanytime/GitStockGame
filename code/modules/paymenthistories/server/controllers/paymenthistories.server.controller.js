@@ -68,7 +68,7 @@ Paymenthistory.findById(id).populate('user', 'displayName').exec(function (err, 
     }else{
       paymenthistory.transactionId = paymentId;
       paymenthistory.paypalId = payerId;
-      paymenthistory.status = "success";
+      paymenthistory.status = "SUCCESS";
       paymenthistory.type = "credit";
       paymenthistory.save(function(err) {
     if (err) {
@@ -146,6 +146,25 @@ exports.update = function(req, res) {
       });
     } else {
       res.jsonp(paymenthistory);
+    }
+  });
+};
+
+
+
+/**
+ * Update a Paymenthistory Via Admin
+ */
+exports.updateAdmin = function(req, res) {
+  var paymenthistory = req.paymenthistory ;
+
+  paymenthistory.save(function(err) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      return {message:"Successfully Updated"};
     }
   });
 };
@@ -290,9 +309,18 @@ User.findById(userid).exec(function (err, user) {
       return next(new Error('Failed to load user ' + id));
     }else{
       if(type === 'credit'){
-      user.user_balance = user.user_balance + amount;}
+      user.user_balance = user.user_balance + amount;
+      user.user_payments.credit = user.user_payments.credit+1;
+    }
       else if(type === 'debit'){
         user.user_balance = user.user_balance - amount;
+        user.user_payments.debit = user.user_payments.debit+1;
+      }
+      if(amount>=50 && type === 'credit' && user.user_payments.bonus == 0){
+        user.user_balance = user.user_balance + 10;
+        user.user_payments.bonus = user.user_payments.bonus+1;
+        paymenthistory.description = "$10 bonus amount added for you first transaction";
+        savePaymenthistory(paymenthistory);
       }
 
       user.save(function (err) {
@@ -313,6 +341,17 @@ User.findById(userid).exec(function (err, user) {
 
 }
 
+function savePaymenthistory(paymenthistory){
+  paymenthistory.save(function(err) {
+    if (err) {
+       console.log("Bonus Amount transaction Failed");
+    } else {
+      console.log("Bonus Amount Added");
+    }
+  });
+
+}
+
 function excecutePayment(paymenthistory, req, res){
 
 
@@ -327,6 +366,7 @@ function excecutePayment(paymenthistory, req, res){
     res.jsonp({redirectUrl:redirectUrl,
               message:'Sorry Wrong Card Details'});
   } else {
+      paymenthistory.transactionId = payment.id;
       console.log("else portion");
       if(payment.payer.payment_method === 'paypal') {
       req.session.paymentId = payment.id;
@@ -340,7 +380,7 @@ function excecutePayment(paymenthistory, req, res){
       console.log("redirect"+redirectUrl);
       res.jsonp({redirectUrl:redirectUrl,message:'Please CLick to Next Button'});
     }else{
-      paymenthistory.status= "success";
+      paymenthistory.status= "SUCCESS";
       paymenthistory.type= "credit";
       paymenthistory.save(function(err) {
     if (err) {
@@ -356,3 +396,96 @@ function excecutePayment(paymenthistory, req, res){
   }
 });
 }
+
+//---------------Payment Send After Admin Approval---------
+
+exports.sendPayoutBulk = function (req, res){
+
+  var query = {status:'APPROVED',
+               type:'debit'};
+
+  Paymenthistory.find(query).sort('-created').populate('user').exec(function(err, paymenthistories) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+
+      var payoutJson = getPayoutJson();
+          for(var i=0; i<paymenthistories.length;i++){
+            var item = getPayoutItem();
+                item.receiver = 'praveen.mudaliar.2012-facilitator@gmail.com';
+                item.sender_item_id = paymenthistories[i].user._id;
+                item.amount.value = paymenthistories[i].amount;
+
+            payoutJson.items.push(item);
+          }
+
+
+
+    paypal.payout.create(payoutJson, function (error, payout) {
+        if (error) {
+          console.log("--------1-----------");
+          res.json({error: error});
+          console.log(error.response);
+      } else {
+        console.log("----------2---------");
+        console.log("Create Payout Response");
+        console.log(payout);
+        
+        var id = payout.batch_header.payout_batch_id;
+        console.log(id);
+
+        paypal.payout.get(id, function (error, payout) {
+    if (error) {
+        console.log(error);
+        throw error;
+    } else {
+        console.log("Get Payout Response");
+        console.log(payout);
+        res.json({Success: payout});
+    }
+});
+      }
+    });
+      console.log("--------3-----------");
+    //  console.log(payoutJson);
+     // res.json({RequestStatus: 'Done'});
+    }
+  });
+
+}
+
+
+
+
+
+
+function getPayoutJson(){
+
+  var sender_batch_id = Math.random().toString(36).substring(9);
+  var create_payout_json =  {
+      sender_batch_header: {
+          sender_batch_id: sender_batch_id,
+          email_subject: "You have a payment from StreetFight"
+      },
+      items: [
+      ]
+  };
+
+  return create_payout_json;
+}
+
+function getPayoutItem(){
+  var payobject ={
+            recipient_type: "EMAIL",
+            amount: {
+                value: 0,
+                currency: "USD"
+            },
+            receiver: null,
+            note: "Thank you.",
+            sender_item_id: null
+        };
+    return payobject;
+ }

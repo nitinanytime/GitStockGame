@@ -21,7 +21,7 @@
                               <li class="active"><a ng-click="vm.status = null" data-toggle="tab"><i class="fa fa-inbox"></i>All Games <span>{{vm.games.length}}</span><div class="clearfix"></div></a></li>
                               <li class=""><a ng-click="vm.status = 'Open'" data-toggle="tab"><i class="fa fa-share-square-o"></i> Own Me</a></li>
                               <li class=""><a ng-click="vm.status = 'Open'" data-toggle="tab"><i class="fa fa-star-o"></i>Open</a></li> 
-                              <li class=""><a ng-click="vm.status = 'Running'" data-toggle="tab"><i class="fa fa-pencil-square-o"></i>Running <span>6</span><div class="clearfix"></div></a></li>  
+                              <li class=""><a ng-click="vm.status = 'Running'" data-toggle="tab"><i class="fa fa-pencil-square-o"></i>Running <div class="clearfix"></div></a></li>  
                               <li class=""><a ng-click="vm.status = 'Closed'" data-toggle="tab"><i class="fa fa-trash-o"></i>Closed</a></li>                              
                             </ul>
                           </nav>
@@ -43,8 +43,10 @@
                         <div class="mailbox-content">
                           
                 <table class="table">
-                    <tbody>
-                        <tr class="table-row" ng-repeat="game in vm.filterStatus(vm.games)">
+                    <tbody style="    display: block;
+    height: 500px;
+    overflow-y: auto;">
+                        <tr class="table-row" ng-repeat="game in vm.filterStatus(vm.games) track by $index">
                             <td ><h4 >
                <a data-ui-sref="games.view({ gameId: game._id })">{{game.game_name}}</a></h4>
                             </td>

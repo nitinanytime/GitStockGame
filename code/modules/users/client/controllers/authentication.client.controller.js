@@ -14,6 +14,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
     }
 
     $scope.signup = function (isValid) {
+
+      if(!$scope.credentials.checked){
+        alert("Please agree terms and condition for signup");
+        return false;
+      }
       $scope.error = null;
 
       if (!isValid) {
@@ -27,7 +32,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$stat
         $scope.authentication.user = response;
 
         // And redirect to the previous or home page
-        $state.go($state.previous.state.name || 'home', $state.previous.params);
+        
+        $state.go('paymenthistories.create');
+       // $state.go($state.previous.state.name || 'home', $state.previous.params);
       }).error(function (response) {
         $scope.error = response.message;
       });

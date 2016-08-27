@@ -36,7 +36,7 @@
     var game = new Game(req.body);
     game.user = req.user;
     
-    game.game_startTime = new Date(game.game_startTime).setHours(5,0,0);
+    game.game_startTime = new Date(game.game_startTime).setHours(5,30,0);
     game.game_endTime = new Date(game.game_endTime).setHours(12,0,0);
 
     if(game.user.roles.indexOf('admin')>0){
@@ -78,7 +78,7 @@ console.log(game);
         notification.message = "You Just added a game";
         notification.user = req.user;
         notification.href = "/games/"+game._id;
-        notification.image = "/imgaes/gamenotify.png";
+        notification.image = "/images/gamenotify.png";
         notification.category = "game";
 
         notificationHandler.sendNotification(notification);
@@ -219,7 +219,7 @@ exports.gamelist = function(req, res){
   /* run the job at 18:55:30 on Dec. 14 2018*/
   var rule3 = new cron.RecurrenceRule();
   //rule.second = 40;
-  rule3.hour =4;
+  rule3.hour =16;
   rule3.minute = 10;
   cron.scheduleJob(rule3, function(){
     console.log("Game End Check at" + new Date());
@@ -423,7 +423,7 @@ function startGameNotification(game){
           notification.message = "Game Started, Best of luck - "+game.game_name;
           notification.user = players[i].user._id;
           notification.href = "/games/"+game._id;
-          notification.image = "/imgaes/gamenotify.png";
+          notification.image = "/images/gamenotify.png";
           notification.category = "game";
 
           notificationHandler.sendNotification(notification);
@@ -633,7 +633,7 @@ function balanceLineup(player,game){
         notification.message = "Game Complete, please check your luck - "+game.game_name;
         notification.user = players[i].user._id;
         notification.href = "/games/"+game._id;
-        notification.image = "/imgaes/gamenotify.png";
+        notification.image = "/images/gamenotify.png";
         notification.category = "game";
 
         notificationHandler.sendNotification(notification);
@@ -658,7 +658,7 @@ function balanceLineup(player,game){
 
     game.game_prize = winnerMoney; 
     console.log(game + winningArray );
-    //var admin = updateAdminBalance('ADD', commision, game);
+    var admin = updateAdminBalance('ADD', commision, game);
 
     if(game.game_winningRule.key === 'winner_take_all'){
       winningArray[0].winingAmount = winnerMoney;
@@ -788,7 +788,7 @@ function balanceLineup(player,game){
             notification.message = "Game Complete, please see report -"+game.game_name;
             notification.user = admin._id;
             notification.href = "/paymenthistories";
-            notification.image = "/imgaes/paymentnotify.png";
+            notification.image = "/images/paymentnotify.png";
             notification.category = "payment";
 
             notificationHandler.sendNotification(notification);
@@ -841,7 +841,7 @@ function balanceLineup(player,game){
             notification.message = description +game.game_name;
             notification.user = user._id;
             notification.href = "/paymenthistories";
-            notification.image = "/imgaes/paymentnotify.png";
+            notification.image = "/images/paymentnotify.png";
             notification.category = "payment";
 
             notificationHandler.sendNotification(notification);
@@ -1095,7 +1095,7 @@ function calculateWinner(game){
         notification.message = "Game Complete, please check your luck - "+game.game_name;
         notification.user = player.user._id;
         notification.href = "/games/"+game._id;
-        notification.image = "/imgaes/gamenotify.png";
+        notification.image = "/images/gamenotify.png";
         notification.category = "game";
 
         notificationHandler.sendNotification(notification);
@@ -1114,12 +1114,18 @@ function calculateWinner(game){
   }
 
   function getGameName(game){
+
     var result = "";
     var market = "NYSE/NASDAQ ";
     var end = game.game_endTime.getTime();
     var start =game.game_startTime.getTime();
-    console.log(end + ' -- '+ start);
-    var days = Math.round((end-start)/(1000*60*60*24));
+
+    var businessDays = getBusinessDatesCount(start , end);
+
+    console.log(end + ' -- '+ start+ '---'+ businessDays);
+
+    var days = Math.round((end-start)/(1000*60*60*24)) + 1;
+
     console.log(days);
     var price = null;
 
@@ -1155,13 +1161,39 @@ function calculateWinner(game){
     if(game.game_winningRule.key === '50_50'){
       price = (winnerMoney *50)/100;
     }
+    price =price.toFixed(2);
 
-    result = market +' '+ days + ' Day [$'+ price + ' to first]  ';
+    result = market +' '+ businessDays + ' Day [$'+ price + ' to first]  ';
 
     return result;
 
 
   }
+
+
+  function getBusinessDatesCount(startDate, endDate) {
+
+    console.log('Day StartDate'+startDate);
+    console.log('Days endDate'+endDate);
+    
+    startDate = new Date(startDate);
+    endDate = new Date(endDate);
+
+    console.log('Day StartDate'+startDate);
+    console.log('Days endDate'+endDate);
+
+    var count = 0;
+    var curDate = startDate;
+    while (curDate <= endDate) {
+        var dayOfWeek = curDate.getDay();
+        if(!((dayOfWeek == 6) || (dayOfWeek == 0)))
+           count++;
+        curDate.setDate(curDate.getDate() + 1);
+    }
+    console.log('Days'+count);
+    return count;
+
+}
 
 
 

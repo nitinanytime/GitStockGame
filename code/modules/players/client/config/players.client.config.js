@@ -13,13 +13,14 @@
       title: 'Top Rankers',
       state: 'players',
       type: 'dropdown',
-      roles: ['*']
+      roles: ['admin']
     });
 
     // Add the dropdown list item
     Menus.addSubMenuItem('topbar', 'players', {
       title: 'List Top20',
-      state: 'players.list'
+      state: 'players.list',
+      roles: ['admin']
     });
 
     // Add the dropdown create item

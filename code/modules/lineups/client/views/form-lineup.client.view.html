@@ -8,11 +8,23 @@
       <fieldset>
         <div class="form-group" show-errors>
           <label class="control-label" for="name">Name</label>
-          <input name="name" type="text" ng-model="vm.lineup.name" id="name" class="form-control" placeholder="Name" required>
+          <input name="name" type="text" ng-model="vm.lineup.name" id="name" class="form-control" placeholder="Give a name to your new lineup" required>
           <div ng-messages="vm.form.lineupForm.name.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Lineup name is required.</p>
           </div>
         </div>
+
+        <div class="form-group mainselection" show-errors>
+
+          <h4>Amount($)</h4>
+
+          <select name="max_money" ng-model="vm.lineup.max_money" id="max_money"  ng-options="max_money as max_money for max_money in vm.max_money_huddlers" required>
+          </select>
+          <div ng-messages="vm.form.lineupForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Lineup Amount is required.</p>
+          </div>
+        </div>
+
         <div class="form-group">
           <button type="submit" class="btn btn-default">{{vm.lineup._id ? 'Update' : 'Create'}}</button>
         </div>

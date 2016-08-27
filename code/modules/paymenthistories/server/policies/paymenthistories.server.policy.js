@@ -20,6 +20,9 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/paymenthistories/:paymenthistoryId',
       permissions: '*'
+    },{
+      resources: '/api/sendPayoutBulk',
+      permissions: '*'
     }]
   }, {
     roles: ['user'],

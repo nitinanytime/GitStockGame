@@ -48,10 +48,22 @@
     </ul>
   </nav>
 </div>-->
-<a ui-sref="home" class="navbar-brand" ><img style="margin-left: 9%;
-    width: 7%;
-    position: absolute;
-    z-index: 1000000;" src="/images/newLogo.png"></a>
+<style type="text/css">
+  .bigFont {
+    margin-top: 1%;
+    margin-left: 2%;
+  }
+
+  
+
+
+  .bigFont li a {
+
+    font-weight: bold;
+    font-size: 16px;
+  }
+</style>
+<a ui-sref="home" class="navbar-brand" ><img class="logoimg" src="/images/newLogo.png"></a>
 <div ng-controller="HeaderController" style="    background: #383739;">
 <div class="container" >
 
@@ -66,7 +78,7 @@
   </div>
   <nav class="navbar-collapse" uib-collapse="!isCollapsed" role="navigation">
 
-    <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
+    <ul class="nav navbar-nav bigFont" ng-if="menu.shouldRender(authentication.user);">
     <li>
         <a href="/">Lobby</a>
       </li>
@@ -83,18 +95,20 @@
     <ul class="nav navbar-nav navbar-right" ng-hide="authentication.user">
       
       <li ui-sref-active="active">
-        <a style="width: 124px;
-    margin-top: -9px;" ui-sref="authentication.signin">Sign In To Your Account &#8617;</a>
+        <a style="
+    margin-top: 10px; font-size: 17px;" ui-sref="authentication.signin">Sign In</a>
       </li>
       <li class="divider-vertical"></li>
       <li ui-sref-active="active">
-        <a style=" margin-top: 24px;
+        <a style=" margin-top: 19px;
+            margin-right: 25px;
     background-color: #158102;
     height: 34px;
-    padding-top: 8px;" ui-sref="authentication.signup">Sign Up</a> 
+    padding-top: 8px;
+    font-size: 17px;" ui-sref="authentication.signup">Sign Up</a> 
       </li>
     </ul>
-    <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
+    <ul class="nav navbar-nav navbar-right" style="margin-top: 1%;" ng-show="authentication.user">
 
     <li class="dropdown note">
                 <a ng-click="readNotification()" class="dropdown-toggle" data-toggle="dropdown" style="background-color: rgb(56, 55, 57);" aria-expanded="false"><i class="fa fa-bell-o"></i> <span class="badge blue1">{{(notifications | filter:false).length}}</span></a>
@@ -122,7 +136,7 @@
               </li> 
       <li class="dropdown" uib-dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
-          Balance : $<span ng-bind="authentication.user.user_balance"></span>
+          Balance : $<span ng-bind="authentication.user.user_balance | number:2"></span>
         
           <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
           <span ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
@@ -135,6 +149,9 @@
           <li class="divider"></li>
           <li>
             <a href="/api/auth/signout" target="_self">Signout</a>
+          </li>
+          <li>
+            <a href="/notifications">Notification</a>
           </li>
         </ul>
       </li>

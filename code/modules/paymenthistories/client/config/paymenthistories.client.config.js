@@ -9,7 +9,7 @@
 
   function menuConfig(Menus) {
     // Set top bar menu items
-    Menus.addMenuItem('topbar', {
+   /* Menus.addMenuItem('topbar', {
       title: 'Paymenthistories',
       state: 'paymenthistories',
       type: 'dropdown',
@@ -35,6 +35,6 @@
       title: 'Withdraw Payment',
       state: 'paymenthistories.withdraw',
       roles: ['user']
-    });
+    });*/
   }
 })();

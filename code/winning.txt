@@ -1,3 +1,8 @@
+Arizona, Hawaii, Idaho, Iowa, Louisiana, New York, Mississippi, Montana, Nevada, Texas, and Washington State
+
+
+Hi Don ,   there is a query regarding payment withdraw section,   - Who will pay the paypal fees,  Like if user requested for $50 withdraw ,   when admin approves that request it will be paid to users payal ID.   Paypal will charge some amount  fees, then user will get $49.5 approx. then how to handle this thing.
+
  "price": "99.870003",
 
 - scheduler timing for start and adjustment.

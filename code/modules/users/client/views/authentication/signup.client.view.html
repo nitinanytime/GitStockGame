@@ -35,6 +35,12 @@
         <div class="form-group" show-errors>
           <label for="password">Password</label>
             <input type="password" id="password" name="password" class="form-control" ng-model="credentials.password" placeholder="Password" uib-popover="{{popoverMsg}}" uib-popover-trigger="focus" password-validator required>
+            <div >
+         
+        
+          
+
+        </div>
           <div ng-messages="userForm.password.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Password is required.</p>
             <div ng-repeat="passwordError in passwordErrors">
@@ -43,9 +49,33 @@
           </div>
         </div>
         <div class="form-group" ng-show="!userForm.password.$error.required">
-          <label>Password Requirements</label>
+          <label>Password Requirements. <img src="/images/help.png" title="The password must be at least 10 characters long.
+
+The password must contain at least one lowercase letter.
+
+The password must contain at least one number.
+
+The password must contain at least one special character."></label>
           <uib-progressbar value="requirementsProgress" type="{{requirementsColor}}"><span style="color:white; white-space:nowrap;">{{requirementsProgress}}%</span></uib-progressbar>
         </div>
+
+        <div class="form-group" show-errors>
+          <label for="user_birthday">Birthday(MM/DD/YYYY)</label>
+          <datepicker date-set-hidden="01/01/1980" date-typer="true" date-max-limit="10/10/1998" date-format="MM/dd/yyyy" >
+          <input name="user_birthday" type="text" ng-model="credentials.user_birthday" id="user_birthday" class="form-control" placeholder="user_birthday (MM/DD/YYYY)" required>
+          </datepicker>
+          <div ng-messages="userForm.user_birthday.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">user_birthday is required.</p>
+          </div>
+        </div>
+        <div>
+        
+          
+
+          <label ><input type="checkbox" ng-model="credentials.checked"  /><label for="checked">Terms and Condition <img src="/images/help.png" title="I agree to the Terms of Use and the Privacy Policy. I confirm that I am at least 18 years of age. Must be 19 years of age in Alabama and Nebraska. Must be 21 years of age in Massachusetts."></label><h6>
+            I agree to the Terms of Use and the Privacy Policy. I confirm that I am at least 18 years of age. Must be 19 years of age in Alabama and Nebraska. Must be 21 years of age in Massachusetts.
+          </h6></label>
+          </div>
         <div class="text-center form-group">
           <button type="submit" class="btn btn-primary">Sign up</button>
           &nbsp; or&nbsp;

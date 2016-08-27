@@ -18,7 +18,7 @@ var PaymenthistorySchema = new Schema({
   },
   amount: {
     type: Number,
-    default: '',
+    default: 0,
     required: 'Please fill amount',
     trim: true
   },
@@ -35,7 +35,7 @@ var PaymenthistorySchema = new Schema({
   },
   status: {
     type: String,
-    default: 'Requested',
+    default: 'REQUESTED',
     required: 'Please fill Tansffer type',
     trim: true
   },
@@ -43,6 +43,10 @@ var PaymenthistorySchema = new Schema({
     type: Number,
     default: null,
     trim: true
+  },
+  hold_balnace: {
+    type: Number,
+    default: 0
   },
   description: {
     type: String,

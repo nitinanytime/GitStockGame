@@ -20,6 +20,7 @@
       roles: ['user']
     });
 
+
     Menus.addSubMenuItem('account', 'settings', {
       title: 'Edit Profile',
       state: 'settings.profile'
@@ -31,6 +32,11 @@
     });
 
     Menus.addSubMenuItem('account', 'settings', {
+      title: 'Payments',
+      state: 'paymenthistories.list'
+    });
+
+    Menus.addSubMenuItem('account', 'settings', {
       title: 'Change Password',
       state: 'settings.password'
     });
@@ -38,6 +44,11 @@
     Menus.addSubMenuItem('account', 'settings', {
       title: 'Manage Social Accounts',
       state: 'settings.accounts'
+    });
+
+    Menus.addSubMenuItem('account', 'settings', {
+      title: 'Chat Room',
+      state: 'chat'
     });
 
   }

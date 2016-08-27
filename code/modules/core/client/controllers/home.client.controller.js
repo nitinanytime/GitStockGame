@@ -1,8 +1,11 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'GamesService',
-  function ($scope,  Authentication, GamesService) {
+angular.module('core').controller('HomeController', ['$scope', 'Authentication', 'GamesService','PlayersService',
+  function ($scope,  Authentication, GamesService, PlayersService) {
     // This provides Authentication context.
+
+    var vm = this;
+    vm.gameModal = false;
     $scope.authentication = Authentication;
 
     var toggle = false;
@@ -39,6 +42,26 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
       $scope.games.sort(comp);
       $scope.nextlive = $scope.games[0].game_startTime;
     });
+  }
+
+  $scope.getGame = function(game){
+    console.log("fdsfd");
+      
+   
+      vm.game = game;
+      vm.game.game_prize = (vm.game.game_minPlayer*vm.game.game_EntryFee)-(((vm.game.game_minPlayer*vm.game.game_EntryFee)*10)/100);
+      
+      
+     PlayersService.query({
+            game: game._id
+        }, function(data) {
+            // body...
+            console.log(data);
+            vm.players = data;
+            vm.gameModal =!vm.gameModal;
+        });
+     
+
   }
 
 var timeinterval = setInterval(function(){ 

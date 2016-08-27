@@ -8,15 +8,15 @@
 
                      <div class="inbox-mail">
                   <div class="col-md-4 compose">
-                   
-                      <h2>Compose</h2>
+                   <button type="button" csv-header="vm.csvHeader" ng-csv="vm.response" filename="test.csv" field-separator=",">Export</button>
+                      <h2  ng-click="vm.payBulk()">Pay To Approved</h2>
                             <nav class="nav-sidebar">
                             <ul class="nav tabs">
-                              <li class="active"><a ng-click="vm.status = null" data-toggle="tab"><i class="fa fa-inbox"></i>All Payments <span>{{vm.paymenthistories.length}}</span><div class="clearfix"></div></a></li>
-                              <li class=""><a ng-click="vm.status = 'Requested'" data-toggle="tab"><i class="fa fa-share-square-o"></i> Requested</a></li>
-                              <li class=""><a ng-click="vm.status = 'success'" data-toggle="tab"><i class="fa fa-star-o"></i>success</a></li> 
-                              <li class=""><a ng-click="vm.status = 'cancel'" data-toggle="tab"><i class="fa fa-pencil-square-o"></i>cancel <span>6</span><div class="clearfix"></div></a></li>  
-                              <li class=""><a ng-click="vm.status = 'Closed'" data-toggle="tab"><i class="fa fa-trash-o"></i>Closed</a></li>                              
+                              <li class="active"><a ng-click="vm.paymentList('REQUESTED')" data-toggle="tab"><i class="fa fa-inbox"></i>Requested<div class="clearfix"></div></a></li>
+                              <li class=""><a ng-click="vm.paymentList('APPROVED')" data-toggle="tab"><i class="fa fa-share-square-o"></i> Approved</a></li>
+                              <li class=""><a ng-click="vm.status = vm.paymentList('SUCCESS')" data-toggle="tab"><i class="fa fa-star-o"></i>success</a></li> 
+                              <li class=""><a ng-click="vm.status = vm.paymentList('CANCELLED')" data-toggle="tab"><i class="fa fa-pencil-square-o"></i>cancel <div class="clearfix"></div></a></li>  
+                              <li class=""><a ng-click="vm.status = 'CLOSED'" data-toggle="tab"><i class="fa fa-trash-o"></i>Closed</a></li>                              
                             </ul>
                           </nav>
                                 <!--<div class="content-box">
@@ -33,7 +33,56 @@
                             <div class="col-md-8 tab-content tab-content-in">
                             <div class="tab-pane active text-style" id="tab1">
                               <div class="inbox-right">
-                                  
+      <modal title="User Payments" visible="vm.userPaymentsModal" >
+      <div class="graph" style="font-size:1.75em">
+     
+                              <div class="tables">
+                                <table class="table table-hover">
+                                
+                       <thead> <tr> <th>Type</th> <th> Amount</th> <th> source</th><th> description</th></tr> </thead> <tbody> <tr  data-ng-repeat="payment in vm.userPayments" 
+        > <th scope="row">{{payment.type}}</th>  <td style="color:red;">${{payment.amount | number:2}}</td><td>{{payment.payment_method}}</td><td>{{payment.description}}</td></tr> </tbody> </table> 
+                              </div>
+
+                              
+                        
+                          </div>
+    </modal>    
+
+    <modal title="Action Payment" visible="vm.paymentActionModal" >
+          <h4>{{vm.userPaymentObj.username}}||{{vm.userPaymentObj.paypalId}}</h4>
+      <form role="form" ng-submit="vm.actionPaymentSave()">
+        <div class="form-group">
+          <label for="email">Amount</label>
+          <input type="number" min="1" class="form-control"  ng-model="vm.userPaymentObj.amount" ng-change="vm.userPaymentObj.hold_balnace =  vm.lastAmount - vm.userPaymentObj.amount"/>
+        </div>
+        <div class="form-group">
+          <label for="hold">Hold</label>
+          <input type="number" class="form-control"  ng-model="vm.userPaymentObj.hold_balnace"/>
+        </div>
+        
+         <div class="form-group mainselection" show-errors>
+          <label class="control-label" for="game_type">Action</label>
+          
+          <select name="status" ng-model="vm.userPaymentObj.status" id="status"  required>
+       
+          <option value="APPROVED">APPROVED</option>
+          <option value="CANCEL">CANCEL</option>
+      
+        </select>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" min="1" class="form-control"  ng-model="vm.userPaymentObj.description"/>
+        </div>
+
+        
+        <button type="submit" class="btn btn-success">Save</button>
+        
+      </form>
+   
+                     
+    </modal>    
                         <div class="mailbox-content">
                           
                 <table class="table">
@@ -45,13 +94,14 @@
                                <h6>{{paymenthistory.type}}</h6>
                             </td>
                             <td class="table-text">
-                              <h6>{{paymenthistory.amount}}</h6>
+                              <h6>{{paymenthistory.amount}} / {{paymenthistory.hold_balnace}}</h6>
                                 <p>{{paymenthistory.payment_method}}</p>
                             </td>
                             <td>
-                              <span ng-class="{'fam': paymenthistory.status == 'Requested' , 
-                              'work': paymenthistory.status == 'success',
-                              'ur': paymenthistory.status == 'cancel'}" >
+                              <span ng-class="{'fam': paymenthistory.status == 'REQUESTED',
+                              'fam': paymenthistory.status == 'APPROVED',
+                              'work': paymenthistory.status == 'SUCCESS',
+                              'ur': paymenthistory.status == 'CANCELLED'}" >
                               {{paymenthistory.status}}</span>
                             </td>
                             <td class="march">
@@ -59,8 +109,17 @@
                             </td>
                           
                              <td >
-               <a class="btn green fifth" data-ui-sref="paymenthistories.view({ paymenthistoryId: paymenthistory._id })">Detail</a>
+               <a ng-click="vm.getUserPayments(paymenthistory.username)">{{paymenthistory.username}}</a>
                             </td>
+
+                           <!-- <td >
+               <a class="btn green fifth" data-ui-sref="paymenthistories.view({ paymenthistoryId: paymenthistory._id })">Action</a>
+                            </td>-->
+
+                            <td >
+  <a class="btn green fifth" ng-click="vm.actionPayment(paymenthistory)">Action</a>
+                            </td>
+
                         </tr>
                       
                     </tbody>

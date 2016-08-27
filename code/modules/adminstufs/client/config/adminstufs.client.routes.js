@@ -37,6 +37,9 @@
         templateUrl: 'modules/adminstufs/client/views/listwithdrawal-adminstufs.client.view.html',
         controller: 'AdminWithdrawListController',
         controllerAs: 'vm',
+        resolve: {
+          paymenthistoryResolve: newPaymenthistory
+        },
         data: {
           pageTitle: 'Withdrawal List'
         }
@@ -87,6 +90,12 @@
     return AdminstufsService.get({
       adminstufId: $stateParams.adminstufId
     }).$promise;
+  }
+
+  newPaymenthistory.$inject = ['PaymenthistoriesService'];
+
+  function newPaymenthistory(PaymenthistoriesService) {
+    return new PaymenthistoriesService();
   }
 
   newAdminstuf.$inject = ['AdminstufsService'];

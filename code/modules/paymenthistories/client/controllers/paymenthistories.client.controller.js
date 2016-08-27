@@ -50,6 +50,8 @@
         vm.paymenthistory.$update(successCallback, errorCallback);
       } else {
         vm.paymenthistory.creditCard = vm.credit_card;
+        paymenthistory.type = "credit";
+        paymenthistory.status = "CANCELLED";
         vm.paymenthistory.$save(successCallback, errorCallback);
       }
 

@@ -21,64 +21,70 @@
     </em>
   </small>
   <p class="lead" data-ng-bind="vm.calculateLineup_money() | setDecimal:2"></p>
+  <h4>Lineup Amount: {{vm.portfolio_value | number :2}} </h4>
+  <h4>Current Amount:  {{vm.running_value | number :2}}</h4>
+  <h4>Balance Amount: {{vm.balance_value | number :2}} </h4>
+   <h4>Your Value: {{vm.balance_value + vm.running_value | number :2}} </h4>
 
-<modal title="Login form" visible="vm.buyStockModel" >
+
+<modal title="Buy Stock" visible="vm.buyStockModel" ><h4 style="    margin-top: -53px;
+    float: right;
+    margin-right: 30px;">{{vm.playermove.stock.Last}}/ {{vm.playermove.stock.Symbol}}</h4>
       <form role="form" ng-submit="vm.buyStockSave()">
         <div class="form-group">
-          <label for="email">Stock Units</label>
+          <label for="email">Shares</label>
           <input type="number" min="1" class="form-control"  ng-model="vm.newStockline.stock_unit"/>
         </div>
+        
+        <div >
+          <input type="checkbox" ng-model="vm.newStockline.checked"  />
+          <label for="checked">Adjust at Game Start <img src="/images/help.png" title="Prices may change before the start of the game. Adjusting stocks allows us to buy or sell stocks in portfolios at game kickoff to ensure everyone starts with $1,000,000. If nothing is checked, the bottommost stock is bought or sold first."></label>
+          
 
-        <div class="form-group">
-          <label for="checked">Check For set as Dilute</label>
-          <input type="checkbox" class="form-control"  ng-model="vm.newStockline.checked"  />
         </div>
         
-        <div class="form-group">
-          <label for="comment">Comment</label>
-          <input type="text" class="form-control"  ng-model="vm.newStockline.comment"  />
-        </div>
+        
        
        <div class="form-group">
-          <h3>Calculated Price - {{(vm.newStockline.stock.Last) * (vm.newStockline.stock_unit)}}</h3>
+          <h3>Calculated Price : ${{(vm.newStockline.stock.Last) * (vm.newStockline.stock_unit) | number:2}}</h3>
         </div>
-        <!--<div class="form-group">
-          <h3>Balance Money - {{(vm.lineup_money) - ((vm.newStockline.stock.Last) * (vm.newStockline.stock_unit))}}</h3>
-        </div>-->
+        <div class="form-group">
+          <h3>Cash Remaining : ${{(vm.balance_value) - ((vm.newStockline.stock.Last) * (vm.newStockline.stock_unit)) | number:2}}</h3>
+        </div>
+        <input placeholder="How much you want to spend?" onfocus="this.type='number';" class="form-control" ng-model="vm.reverseMoney" max="vm.balance_value" ng-change="vm.reverseRound()"/>
         <button type="submit" class="btn btn-success">Buy</button>
-        <button class="btn btn-default" ng-click="regtoggleModal()" >Registration</button>
-
+        
       </form>
     </modal>
 
-     <modal title="Login form" visible="vm.sellStockModel" >
+    <modal title="Stock Update" visible="vm.sellStockModel" >
       <form role="form" ng-submit="vm.sellStockSave()">
         <div class="form-group">
-          <label for="email">Stock Units</label>
+          <label for="email">Shares</label>
           <input type="number" min="0" class="form-control"  ng-model="vm.newStockline.stock_unit"/>
         </div>
 
-        <div class="form-group">
-          <label for="checked">Check For set as Dilute</label>
-          <input type="checkbox" class="form-control"  ng-model="vm.newStockline.checked"  />
+       <div >
+          <input type="checkbox" ng-model="vm.newStockline.checked"  />
+          <label for="checked">Adjust at Game Start <img src="/images/help.png" title="Prices may change before the start of the game. Adjusting stocks allows us to buy or sell stocks in portfolios at game kickoff to ensure everyone starts with $1,000,000. If nothing is checked, the bottommost stock is bought or sold first."></label>
+          
+
         </div>
         
-        <div class="form-group">
-          <label for="comment">Comment</label>
-          <input type="text" class="form-control"  ng-model="vm.newStockline.comment"  />
-        </div>
-       
+      
        <div class="form-group">
-          <h3>Calculated Price -> {{(vm.newStockline.stock.Last) * (vm.newStockline.stock_unit) | setDecimal:2}}</h3>
+          <h3>Calculated Price : ${{(vm.newStockline.stock.Last) * (vm.newStockline.stock_unit) | number:2}}</h3>
         </div>
-        <!--<div class="form-group">
-          <h3>Balance Money -> {{(vm.lineup_money) + ((vm.newStockline.stock.Last) * (vm.old_stock_unit - vm.newStockline.stock_unit))}}</h3>
-        </div>-->
-        <button type="submit" class="btn btn-success">Save</button>
+        <div class="form-group">
+          <h3>Cash Remaining :  ${{(vm.balance_value) + ((vm.newStockline.stock.Last) * (vm.old_stock_unit - vm.newStockline.stock_unit)) | number:2}}</h3>
+        </div>
+        <input placeholder="How much you want to spend?" onfocus="this.type='number';" class="form-control" ng-model="vm.reverseMoney" max="vm.balance_value" ng-change="vm.reverseRound()" />
+        <button type="submit" class="btn btn-success" >Save</button>
         
 
       </form>
     </modal>
+
 
   <div class="col-md-6 list-group" >
   <h4  >Stock List</h4>
@@ -95,7 +101,7 @@
                         </div><!-- Input Group -->
                       </form>
                        <thead> <tr> <th>Stock Symbol</th> <th> Name</th> <th>Stock Rate</th> <th>Last Rate</th> <th>Change</th> <th>Buy</th> </tr> </thead> <tbody> <tr  data-ng-repeat="stock in vm.stocks | filter:searchStock | limitTo:10" 
-       > <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{stock.Symbol}}</th> <td>{{stock.Name}}</td> <td>{{stock.Market}}</td> <td>{{stock.Last}}</td> 
+       > <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{stock.Symbol}}</th> <td>{{stock.Name}}</td> <td>{{stock.Market}}</td> <td>{{stock.Last| number :2}}</td> 
        <td  ng-if="stock.ChangeFromPreviousClose < 0" style="color:red;">{{stock.ChangeFromPreviousClose}}</td>
        <td  ng-if="stock.ChangeFromPreviousClose >= 0" style="color:green;">{{stock.ChangeFromPreviousClose}}</td> 
         <td><span style="font-size: 1.5em;" class="fam"  data-ng-click="vm.buyThisStock(stock)">+</span></td></tr> </tbody> </table> 
@@ -120,7 +126,7 @@
                                 <table class="table table-hover">
                               
                        <thead> <tr> <th> </th> <th>Stock Symbol</th> <th>Shares</th> <th>Value</th> <th>Sell</th> </tr> </thead> <tbody> <tr  data-ng-repeat="linup in vm.lineup.line | filter:searchStockLineUp | limitTo:20" 
-       > <td><input type="checkbox" ng-model="linup.checked"></input></td> <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{linup.stock.Symbol}}</th> <td>{{linup.stock_unit}}</td> <td>{{(linup.stock_unit)*(linup.stock.Last)}}</td>  <td><span style="font-size: 1.5em;" data-ng-click="vm.sellThisStock(linup.stock)" class="fam">X</span></td></tr> </tbody> </table> 
+       > <td><input type="checkbox" ng-model="linup.checked"></input></td> <th scope="row" data-ui-sref="stocks.view({ stockId: stock._id })">{{linup.stock.Symbol}}</th> <td>{{linup.stock_unit}}</td> <td>{{(linup.stock_unit)*(linup.stock.Last) | number :2}}</td>  <td><span style="font-size: 1.5em;" data-ng-click="vm.sellThisStock(linup.stock)" class="fam">X</span></td></tr> </tbody> </table> 
                               </div>
                         
                           </div>

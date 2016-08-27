@@ -1,4 +1,6 @@
-<section>
+<section style="margin-left: 5%;
+    margin-right: 10%;
+}">
   <div class="page-header">
     <h1 data-ng-bind="vm.paymenthistory.name"></h1>
   </div>
@@ -19,5 +21,10 @@
       <span data-ng-if="!vm.paymenthistory.user">Deleted User</span>
     </em>
   </small>
-  <p class="lead" data-ng-bind="vm.paymenthistory.description"></p>
+  <p class="lead" > TransactionId -: {{vm.paymenthistory.transactionId}} </p>
+  <p class="lead" > Amount -: {{vm.paymenthistory.amount}} </p>
+  <p class="lead" >Type -: {{vm.paymenthistory.type}} </p>
+  <p class="lead" >Status -: {{vm.paymenthistory.status}}</p>
+  <p class="lead" > Description -: {{vm.paymenthistory.description}}</p>
+ 
 </section>

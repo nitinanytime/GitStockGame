@@ -33,6 +33,11 @@ var LineupSchema = new Schema({
     default: 0,
     trim: true
   },
+  max_money: {
+    type: Number,
+    default: 1000000,
+    trim: true
+  },
   created: {
     type: Date,
     default: Date.now
